@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTheme } from "next-themes";  
 import { useState } from "react";
 import DeFiCharts from "./DeFiCharts";  
+import TPSCharts from "./TPSCharts";
   
 export default function Body() {  
     return (  
@@ -1242,6 +1243,9 @@ export default function Body() {
                 <div className="flex flex-col">
                     <DeFiCharts />
                 </div>
+                <div>
+                        <TPSCharts />
+                    </div>
             </div>
         </div>  
     )  
