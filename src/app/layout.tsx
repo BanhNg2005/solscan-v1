@@ -36,7 +36,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
             <Body />
             <main>
               {children}
