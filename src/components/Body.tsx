@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Header from "./Header";
 import DeFiCharts from "./DeFiCharts";
 import TPSCharts from "./TPSCharts";
@@ -12,12 +12,12 @@ import { NetworkCharts } from "./NetworkCharts";
 export default function Body() {
     // Shared state for time range across TPS and Network charts
     const [timeRange, setTimeRange] = useState<"30m" | "2h" | "6h">("30m");
+    const topRef = useRef<HTMLDivElement>(null)
+
 
     return (
         <div className="w-full flex-1 min-h min-h-screen bg-gray-50 flex-col">
-
-                    < Header />
-            {/* <div className="mx-auto max-w-full px-4 md:px-6 2xl:px-0 flex-col md:flex items-center justify-between"> */}
+            < Header />
             <div className="my-0 mx-auto max-w-full px-4 md:px-6 2xl:px-0 2xl:max-w-[1400px] pt-4 sm:pt-5">
                 <div className="flex flex-col items-stretch justify-start gap-2 md:gap-4">
                     <div className="flex rounded-xl items-center justify-between bg-white border mt-5 align-middle border-border shadow-md overflow-hidden">
@@ -260,7 +260,7 @@ export default function Body() {
                             </div>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5 px-4">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5 ">
                         {/* Left side - Dashboards (1/2 width on large screens) */}
                         <div className="flex flex-col items-stretch justify-start gap-4">
                             <div className="rounded-xl border-border shadow-md overflow-hidden border">
@@ -1144,20 +1144,131 @@ export default function Body() {
                                 </div>
                             </div>
                         </div>
-                        <div className="flex flex-col">
-                            <DeFiCharts />
+                        <div className="rounded-xl border-border p-0 bg-neutral-100 overflow-hidden h-full border">
+                            <div className="flex flex-col gap-4 items-start justify-start h-full">
+                                <DeFiCharts />
+                            </div>
                         </div>
                     </div>
 
-                    <div className="w-full mt-6 px-4">
+                    <div className="w-full mt-6">
                         <TPSCharts range={timeRange} onRangeChange={setTimeRange} />
                     </div>
-                    <div className="w-full mt-6 px-4">
+                    <div className="w-full mt-6">
                         <NetworkCharts range={timeRange} onRangeChange={setTimeRange} />
                     </div>
-                    <footer></footer>
                 </div>
             </div>
+            <footer className="w-full bg-white mt-6">
+                <div className="my-0 mx-auto max-w-full md:px-6 2xl:px-0 2xl:max-w-[1400px]">
+                    <div className="flex gap-1 flex-row items-center justify-between flex-wrap py-4 border-neutral-200">
+                        <div className="flex flex-row flex-wrap gap-2 items-stretch justify-start">
+                            <a href="https://x.com/solscanofficial" className="flex items-center gap-2 justify-center group-hover:text-blue-500"
+                                aria-label="Twitter" target="_blank">
+                                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100">
+                                    <Image
+                                        src={"/X.svg"}
+                                        alt="Twitter Icon"
+                                        width={16}
+                                        height={16}
+                                        className="w-5 h-5 text-neutral-500 group-hover:text-blue-500 transition-colors duration-200"
+                                    />
+                                </div>
+                            </a>
+                            <a href="https://solscan.substack.com/" className="flex items-center gap-2 justify-center group-hover:text-blue-500"
+                                aria-label="Substack" target="_blank">
+                                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100">
+                                    <Image
+                                        src={"/substack.svg"}
+                                        alt="Substack Icon"
+                                        width={16}
+                                        height={16}
+                                        className="w-5 h-5 text-neutral-500 group-hover:text-blue-500 transition-colors duration-200"
+                                    />
+                                </div>
+                            </a>
+                        </div>
+                        <div className="flex flex-row flex-wrap gap-1 items-center justify-start cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+                            <Image
+                                src={"/arrow-up-to-line.svg"}
+                                alt="Back to Top Icon"
+                                width={14}
+                                height={14}
+                                className="w-4 h-4 text-neutral-500 hover:text-blue-500 transition-colors duration-200"
+
+                            />
+                            <div className="not-talic font-medium text-neutral-700 text-sm leading-6">
+                                Back to Top
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-row flex-wrap justify-start grow-0 shrink-0 basis-full min-w-0 w-full box-border py-6 lg:py-8 border-t">
+                        <div className="max-w-4xl lg:max-w-7xl flex-1 lg:flex block relative box-border my-0 px-1">
+                            <div className="flex flex-col gap-2 items-stretch justify-start pr-0 lg:pr-8">
+                                <div className="flex flex-row flex-wrap gap-2 items-center justify-start">
+                                    <div className="flex flex-row flex-wrap gap-1 items-center justify-center h-7 w-7 p-2 rounded-full bg-neutral-800">
+                                        <Image
+                                            src={"/solana.png"}
+                                            alt="Solscan Logo"
+                                            width={398}
+                                            height={312}
+                                            className="w-10 h-2 text-white"
+                                        />
+                                    </div>
+                                    <div className="text-lg text-neutral-700 font-medium not-italic leading-6">
+                                        Powered by Solana Blockchain
+                                    </div>
+                                    <div className="not-italic font-normal text-xs leading-4 text-neutral-500">
+                                        Solscan is the leading Block Explorer and Search, API & Analytics Platform for Solana blockchain.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="max-w-1/2 sm:max-w-1/2 md:max-w-1/3 lg:max-w-[20.83%] basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-[20.83%] block relative box-border my-0 px-1">
+                            <div className="flex flex-col gap-3 items-stretch justify-start">
+                                <div className="not-italic text-neutral-700 font-medium text-sm leading-6">
+                                    Company
+                                </div>
+                                <a href="/branding" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Branding</a>
+                                <a href="contactus" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Contact Us</a>
+                                <a href="terms-of-service" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Terms of Service</a>
+                                <a href="privacy-policy" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Privacy Policy</a>
+                                <a href="bugboutline" target="_blank" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Bug Bounty</a>
+                            </div>
+                        </div>
+                        <div className="max-w-1/2 sm:max-w-1/2 md:max-w-1/3 lg:max-w-[20.83%] basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-[20.83%] block relative box-border my-0 px-1">
+                            <div className="flex flex-col gap-3 items-stretch justify-start">
+                                <div className="not-italic text-neutral-700 font-medium text-sm leading-6">
+                                    Company
+                                </div>
+                                <a href="/branding" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Branding</a>
+                                <a href="contactus" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Contact Us</a>
+                                <a href="terms-of-service" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Terms of Service</a>
+                                <a href="privacy-policy" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Privacy Policy</a>
+                                <a href="bugboutline" target="_blank" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Bug Bounty</a>
+                            </div>
+                        </div>
+                        <div className="max-w-1/2 sm:max-w-1/2 md:max-w-1/3 lg:max-w-[20.83%] basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-[20.83%] block relative box-border my-0 px-1">
+                            <div className="flex flex-col gap-3 items-stretch justify-start">
+                                <div className="not-italic text-neutral-700 font-medium text-sm leading-6">
+                                    Company
+                                </div>
+                                <a href="/branding" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Branding</a>
+                                <a href="contactus" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Contact Us</a>
+                                <a href="terms-of-service" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Terms of Service</a>
+                                <a href="privacy-policy" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Privacy Policy</a>
+                                <a href="bugboutline" target="_blank" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Bug Bounty</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex flex-row flex-wrap gap-1 items-center justify-between py-3 border-t border-neutral-200">
+                        <div className="not-italic font-normal text-sm leading-4 text-gray-500">
+                            Solscan @2025
+                        </div>
+                        <div></div>
+                    </div>
+                </div>
+            </footer>
         </div>
     )
 }  
