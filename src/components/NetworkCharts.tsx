@@ -76,9 +76,9 @@ function CustomPingTooltip({ active, payload }: any) {
     <div className="bg-white shadow-md rounded-md p-3 text-sm space-y-1">
       <div className="text-md text-gray-500">{formattedDate}</div>
       <div className="text-xs text-gray-500">{timeAgo}</div>
-      <div><strong>Average Ping:</strong> {data.averagePing} ms</div>
-      <div><strong>Confirmed Nodes:</strong> {data.confirmedNodes} </div>
-      <div><strong>Avg Slot Agency:</strong> {data.slotAgency}</div>
+      <div><strong> {data.averagePing} ms</strong></div>
+      <div><strong>{data.confirmedNodes} confirmed</strong></div>
+      <div><strong>{data.slotAgency} Average Slot Agency</strong></div>
     </div>      
   )
 }
