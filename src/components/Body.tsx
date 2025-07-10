@@ -7,14 +7,19 @@ import { useState } from "react";
 import Header from "./Header";
 import DeFiCharts from "./DeFiCharts";
 import TPSCharts from "./TPSCharts";
+import { NetworkCharts } from "./NetworkCharts";
 
 export default function Body() {
+    // Shared state for time range across TPS and Network charts
+    const [timeRange, setTimeRange] = useState<"30m" | "2h" | "6h">("30m");
+
     return (
         <div className="w-full flex-1 min-h min-h-screen bg-gray-50 flex-col">
 
-            <div className="mx-auto max-w-full px-4 md:px-6 2xl:px-0 flex-col md:flex items-center justify-between">
-                <div className="flex flex-col items-stretch justify-start gap-2 md:gap-4 w-full max-w-7xl">
                     < Header />
+            {/* <div className="mx-auto max-w-full px-4 md:px-6 2xl:px-0 flex-col md:flex items-center justify-between"> */}
+            <div className="my-0 mx-auto max-w-full px-4 md:px-6 2xl:px-0 2xl:max-w-[1400px] pt-4 sm:pt-5">
+                <div className="flex flex-col items-stretch justify-start gap-2 md:gap-4">
                     <div className="flex rounded-xl items-center justify-between bg-white border mt-5 align-middle border-border shadow-md overflow-hidden">
                         <div className="p-2 flex items-center gap-2 bg-neutral-100 rounded-l-xl">
                             <Image
@@ -213,31 +218,31 @@ export default function Body() {
 
                         <div className="bg-white rounded-2xl border p-6 hover:shadow-lg transition-shadow">
                             <div className="flex gap-10 flex-row items-stretch justify-between w-full">
-  {/* Left Side: Total Stake */}
-  <div>
-    <h3 className="text-gray-900">Total Stake (SOL)</h3>
-    <p className="text-neutral-800 font-roboto text-lg font-extrabold leading-6">
-      400,924,311.34
-    </p>
-  </div>
+                                {/* Left Side: Total Stake */}
+                                <div>
+                                    <h3 className="text-gray-900">Total Stake (SOL)</h3>
+                                    <p className="text-neutral-800 font-roboto text-lg font-extrabold leading-6">
+                                        400,924,311.34
+                                    </p>
+                                </div>
 
-  {/* Right Side: Link */}
-  <a
-    href="/analysis/solana_staking"
-    className="flex items-center gap-1 text-blue-500 font-roboto text-sm font-semibold"
-  >
-    <span className="text-neutral-500 not-italic font-normal ">
-      Skating Dashboard
-    </span>
-    <Image
-      src="/right-arrow.svg"
-      alt="Arrow Right Icon"
-      width={16}
-      height={16}
-      className="w-4 h-4"
-    />
-  </a>
-</div>
+                                {/* Right Side: Link */}
+                                <a
+                                    href="/analysis/solana_staking"
+                                    className="flex items-center gap-1 text-blue-500 font-roboto text-sm font-semibold"
+                                >
+                                    <span className="text-neutral-500 not-italic font-normal ">
+                                        Skating Dashboard
+                                    </span>
+                                    <Image
+                                        src="/right-arrow.svg"
+                                        alt="Arrow Right Icon"
+                                        width={16}
+                                        height={16}
+                                        className="w-4 h-4"
+                                    />
+                                </a>
+                            </div>
 
                             <div className="rounded-lg border border-border bg-neutral-100 p-4 w-full border-none mt-4">
                                 <div className="flex flex-col gap-4 items-start justify-start">
@@ -833,20 +838,7 @@ export default function Body() {
                                                                 </Link>
                                                             </div>
                                                         </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+
                                                     </tr>
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
@@ -882,20 +874,7 @@ export default function Body() {
                                                                 </Link>
                                                             </div>
                                                         </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+
                                                     </tr>
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
@@ -931,20 +910,7 @@ export default function Body() {
                                                                 </Link>
                                                             </div>
                                                         </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+
                                                     </tr>
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
@@ -980,20 +946,7 @@ export default function Body() {
                                                                 </Link>
                                                             </div>
                                                         </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+
                                                     </tr>
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
@@ -1029,20 +982,7 @@ export default function Body() {
                                                                 </Link>
                                                             </div>
                                                         </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+
                                                     </tr>
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
@@ -1078,20 +1018,7 @@ export default function Body() {
                                                                 </Link>
                                                             </div>
                                                         </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+
                                                     </tr>
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
@@ -1127,20 +1054,7 @@ export default function Body() {
                                                                 </Link>
                                                             </div>
                                                         </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+
                                                     </tr>
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
@@ -1176,20 +1090,7 @@ export default function Body() {
                                                                 </Link>
                                                             </div>
                                                         </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+
                                                     </tr>
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
@@ -1225,20 +1126,7 @@ export default function Body() {
                                                                 </Link>
                                                             </div>
                                                         </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -1260,10 +1148,14 @@ export default function Body() {
                             <DeFiCharts />
                         </div>
                     </div>
-                    
+
                     <div className="w-full mt-6 px-4">
-                        <TPSCharts />
+                        <TPSCharts range={timeRange} onRangeChange={setTimeRange} />
                     </div>
+                    <div className="w-full mt-6 px-4">
+                        <NetworkCharts range={timeRange} onRangeChange={setTimeRange} />
+                    </div>
+                    <footer></footer>
                 </div>
             </div>
         </div>
