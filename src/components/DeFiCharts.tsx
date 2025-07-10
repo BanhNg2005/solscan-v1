@@ -112,7 +112,7 @@ export default function DeFiCharts() {
   };
 
   return (
-    <div className="rounded-xl border-border shadow-md overflow-hidden border bg-white">
+    <div className="rounded-xl border-border shadow-md overflow-hidden border bg-white h-full w-full">
       <div className="flex flex-col gap-4 items-start justify-start">
         {/* Header */}
         <div className="flex flex-row gap-1 items-center justify-between w-full flex-wrap px-4 pt-4">
