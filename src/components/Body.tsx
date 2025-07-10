@@ -12,8 +12,6 @@ import { NetworkCharts } from "./NetworkCharts";
 export default function Body() {
     // Shared state for time range across TPS and Network charts
     const [timeRange, setTimeRange] = useState<"30m" | "2h" | "6h">("30m");
-    const topRef = useRef<HTMLDivElement>(null)
-
 
     return (
         <div className="w-full flex-1 min-h min-h-screen bg-gray-50 flex-col">
@@ -264,9 +262,9 @@ export default function Body() {
                         {/* Left side - Dashboards (1/2 width on large screens) */}
                         <div className="flex flex-col items-stretch justify-start gap-4">
                             <div className="rounded-xl border-border shadow-md overflow-hidden border">
-                                <div className="flex flex-col gap-4 items-start justify-start">
+                                <div className="flex flex-col gap-4 items-start justify-start bg-white">
                                     <div className="flex flex-row gap-1 items-center justify-between w-full flex-wrap px-4 pt-4">
-                                        <h3 className="text-gray-900 text-lg font-semibold">Latest Transactions</h3>
+                                        <h3 className="text-gray-900 text-sm font-semibold">Latest Transactions</h3>
                                         <button className="white-space-nowrap focus:outline-none items-center justify-center font-semibold text-cyan-300 bg-white border-cyan-300 border rounded-lg px-1 py-1 hover:bg-emerald-50 transition-colors">Customize</button>
                                     </div>
                                     <div className="flex flex-col gap-0 items-stretch justify-start w-full h-full">
@@ -274,7 +272,7 @@ export default function Body() {
                                             <table className="w-full border-separate border-spacing-0">
                                                 <thead className="sticky top-0">
                                                     <tr className="bg-gray-100">
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700">
+                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
                                                             <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
                                                                 <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
                                                                     <div className="flex gap-1 flex-row items-center justify-start">
@@ -289,22 +287,22 @@ export default function Body() {
                                                                 </div>
                                                             </div>
                                                         </th>
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700">
+                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
                                                             <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
                                                                 <span>Signature</span>
                                                             </div>
                                                         </th>
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700">
+                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
                                                             <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
                                                                 <span>Time</span>
                                                             </div>
                                                         </th>
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700">
+                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
                                                             <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
                                                                 <span>Block</span>
                                                             </div>
                                                         </th>
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700">
+                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
                                                             <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
                                                                 <span>Instructions</span>
                                                             </div>
@@ -656,55 +654,7 @@ export default function Body() {
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                    
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
 
@@ -770,31 +720,31 @@ export default function Body() {
                                 </div>
                             </div>
                             <div className="rounded-xl border-border shadow-md overflow-hidden border">
-                                <div className="flex flex-col gap-4 items-start justify-start">
-                                    <div className="flex flex-row gap-1 items-center justify-between w-full flex-wrap px-4 pt-4">
-                                        <h3 className="text-gray-900 text-lg font-semibold">Token Dashboard</h3>
+                                <div className="flex flex-col gap-4 items-start justify-start bg-white">
+                                    <div className="flex flex-row gap-1 items-center justify-between w-full flex-wrap px-4 pt-4 bg-white">
+                                        <h3 className="text-gray-900 text-sm font-semibold">Token Dashboard</h3>
                                     </div>
                                     <div className="flex flex-col gap-0 items-stretch justify-start w-full h-full">
-                                        <div className="min-w-0 table-auto flex-1">
+                                        <div className="min-w-0 table-auto flex-1 ">
                                             <table className="w-full border-separate border-spacing-0">
                                                 <thead className="sticky top-0">
                                                     <tr className="bg-gray-100">
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700">
+                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
                                                             <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
                                                                 <span>Token</span>
                                                             </div>
                                                         </th>
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700">
+                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
                                                             <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
                                                                 <span>Symbol</span>
                                                             </div>
                                                         </th>
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700">
+                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
                                                             <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
                                                                 <span>Price</span>
                                                             </div>
                                                         </th>
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700">
+                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
                                                             <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
                                                                 <span>Market Cap (F.D)</span>
                                                             </div>
@@ -823,150 +773,6 @@ export default function Body() {
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
                                                                     TRUMP
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-
-                                                    </tr>
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-
-                                                    </tr>
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-
-                                                    </tr>
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-
-                                                    </tr>
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
-                                                                    </Link>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -1265,7 +1071,20 @@ export default function Body() {
                         <div className="not-italic font-normal text-sm leading-4 text-gray-500">
                             Solscan @2025
                         </div>
-                        <div></div>
+                        <div className="flex flex-row flex-wrap gap-1 items-center justify-start">
+                            <div className="not-italic font-normal text-sm leading-6 text-gray-500">Donations: </div>
+                            <span className="w-auto max-w-full whitespace-nowrap">
+                                <span className="border border-dashed border-transparent box-content break-all px-1 rounded-md align-middle font-normal text-sm leading-6 text-blue-500 hover:text-blue-600 transition-colors duration-200">
+                                    <a href="/account/D27DgiipBR5dRdij2L6NQ27xwyiLK5Q2DsEM5ML5EuLK">D27Dgi...L5EuLK</a>
+                                </span>
+                            </span>
+                            <Image
+                                src={"/red-heart.svg"}
+                                alt="Heart Icon"
+                                width={14}
+                                height={14}
+                            />
+                        </div>
                     </div>
                 </div>
             </footer>
