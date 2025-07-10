@@ -1,7 +1,6 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { useState } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, TooltipProps } from "recharts"
 import { formatDistanceToNow } from "date-fns"
 
@@ -35,11 +34,11 @@ function generateChartTPSData(range: "30m" | "2h" | "6h") {
             intervalMs = 60 * 1000 // 1 minute
             break
         case "2h":
-            totalPoints = 24
+            totalPoints = 30
             intervalMs = 5 * 60 * 1000 // 5 minutes
             break
         case "6h":
-            totalPoints = 24
+            totalPoints = 30
             intervalMs = 15 * 60 * 1000 // 15 minutes
             break
     }
@@ -105,8 +104,12 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export default function TPSCharts() {
-    const [range, setRange] = useState<"30m" | "2h" | "6h">("30m")
+interface TPSChartsProps {
+    range: "30m" | "2h" | "6h";
+    onRangeChange: (range: "30m" | "2h" | "6h") => void;
+}
+
+export default function TPSCharts({ range, onRangeChange }: TPSChartsProps) {
     const chartTPS = generateChartTPSData(range)
 
     return (
@@ -115,28 +118,28 @@ export default function TPSCharts() {
                 <CardTitle className="text-sm">TPS | True TPS</CardTitle>
                 <div className="inline-flex rounded-md ml-auto" role="group">
                     <button
-                        onClick={() => setRange("30m")}
+                        onClick={() => onRangeChange("30m")}
                         className={`px-3 py-1 text-sm rounded-s-3xl transition-colors ${range === "30m"
-                                ? 'bg-teal-500 text-xs text-white'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 text-xs font-semibold'
+                            ? 'bg-teal-500 text-xs text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 text-xs font-semibold'
                             }`}
                     >
                         30m
                     </button>
                     <button
-                        onClick={() => setRange("2h")}
+                        onClick={() => onRangeChange("2h")}
                         className={`px-3 py-1 text-sm transition-colors ${range === "2h"
-                                ? 'bg-teal-500 text-xs text-white'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 text-xs font-semibold'
+                            ? 'bg-teal-500 text-xs text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 text-xs font-semibold'
                             }`}
                     >
                         2H
                     </button>
                     <button
-                        onClick={() => setRange("6h")}
+                        onClick={() => onRangeChange("6h")}
                         className={`px-3 py-1 text-sm rounded-e-lg transition-colors ${range === "6h"
-                                ? 'bg-teal-500 text-xs text-white'
-                                : 'bg-gray-100 text-gray-700 hover:bg-gray-200 text-xs font-semibold'
+                            ? 'bg-teal-500 text-xs text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 text-xs font-semibold'
                             }`}
                     >
                         6H
