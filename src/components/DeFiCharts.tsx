@@ -191,7 +191,7 @@ export default function DeFiCharts() {
 
         {/* Chart Container */}
         <div className="w-full px-4 pb-4">
-          <div className="h-100 w-full">
+          <div className="h-141 w-full">
             {selectedChart === 'area' ? (
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={protocolData}>
