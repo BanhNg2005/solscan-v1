@@ -4,7 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -17,7 +18,44 @@ import {
 export default function Header() {
   const { setTheme } = useTheme();
   const [search, setSearch] = useState("");
-  const [list, setList] = useState([]);
+  const [user, setUser] = useState<{
+    id: string;
+    email: string;
+  } | null>(null);
+  const router = useRouter();
+
+  // Check if user is logged in
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const response = await fetch('/api/auth/me');
+                if (response.ok) {
+                    const data = await response.json();
+                    setUser(data.user);
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        };
+
+        checkAuth();
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('/api/auth/logout', {
+                method: 'POST',
+            });
+
+            if (response.ok) {
+                setUser(null);
+                router.push('/user/signin');
+            }
+        } catch (error) {
+            console.error('Logout failed:', error);
+        }
+    };
+
 
   return (
 
@@ -393,13 +431,47 @@ export default function Header() {
                     </DropdownMenu>
 
                     {/* Sign In Button */}
-                    <button type="button" className="flex cursor-pointer select-none items-center rounded-lg px-4 py-3 text-sm leading-6 outline-none text-white">
+                      {user ? (
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <button className="flex cursor-pointer select-none items-center rounded-lg px-4 py-3 text-sm leading-6 outline-none text-white ml-0 rounded-sm leading-6">
+                            <div className="cursor-pointer text-neutral-100 bg-fuchsia-500 flex items-center justify-center rounded-3xl w-8 h-8 p-1">
+                                <div className="text-white text-sm font-normal not-italic flex items-center justify-center">
+                                    {user.email.split('@')[0][0].toUpperCase()}
+                                </div>
 
-                      <a href="/login" className="flex flex-row items-center gap-1 justify-center flex-wrap">
+                            </div>
+                            <Image
+                              src={`/chevron-down.svg`}
+                              alt="Dropdown Icon"
+                              width={18}
+                              height={18}
+                              className="transition-transform duration-200 cursor-pointer"
+                            />
+                        </button>
+                        
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start" className="bg-white border border-gray-200 shadow-lg p-2">
+                        <DropdownMenuItem onClick={handleLogout}>
+                            <div className="flex items-center px-4 py-3 hover:bg-gray-100 transition-colors rounded-md">
+                                Logout
+                            </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild className="flex items-center px-4 py-3 hover:bg-gray-100 transition-colors rounded-md">
+                            <Link href="/user/profile">
+                                Profile
+                            </Link> 
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            ) : (
+                <button className="flex cursor-pointer select-none items-center rounded-lg px-4 py-3 text-sm leading-6 outline-none text-white">
+                    <Link href="/user/signin" className="flex flex-row items-center gap-1 justify-center flex-wrap">
                         Sign in
-                      </a>
+                    </Link>
+                </button>
+            )}
 
-                    </button>
 
                     <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'right' }}>
                       <nav>
@@ -432,8 +504,8 @@ export default function Header() {
               <div className="flex flex-row flex-wrap justify-start grow-0 shrink-0">
                 <div className="max-w-2xl w-full my-0 px-1 flex">
 
-                    <div className="items-stretch justify-start max-w-2xl w-full">
-
+                    {/* <div className="items-stretch justify-start max-w-2xl w-full"> */}
+                    <div className="flex flex-col gap-0 justify-center items-start w-full tb:w-[80%] tb:pr-5">
                         <h1 className="text-2xl font-medium not-italic mb-4 text-white flex-auto">Exolore Solana Blockchain</h1>
                         <div className="w-full h-11 relative">
                           <div className="flex gap-1 flex-row items-center justify-start bg-neutral-100 rounded-lg w-full z-20 border border-neutral-300 absolute">
@@ -445,7 +517,7 @@ export default function Header() {
                                       onChange={(e) => setSearch(e.target.value)}
                                       placeholder="Search transactions, blocks, programs, and tokens"
                                     />
-                                    <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-fuchsia-500 rounded-md hover:bg-fuchsia-900 transition py-2 px-4">
+                                    <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-fuchsia-600 rounded-md hover:bg-fuchsia-700 transition py-2 px-4">
                                       <Link href={`/search/${search}`}>
                                         <Image
                                           src="/search.svg"
