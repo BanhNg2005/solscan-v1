@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useTheme } from "next-themes";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Header from "./Header";
 import DeFiCharts from "./DeFiCharts";
 import TPSCharts from "./TPSCharts";
@@ -31,13 +30,7 @@ export default function Body() {
                         <div className="relative w-full overflow-hidden">
                             <div className="absolute right-0 top-0 bottom-0 flex items-center z-10">
                                 <div className="absolute inset-0 w-8 bg-gradient-to-l from-white to-transparent"></div>
-                                <Image
-                                    src="/right-arrow.svg"
-                                    alt="Right Arrow"
-                                    width={24}
-                                    height={24}
-                                    className="w-5 h-5 text-neutral-500 mr-2.5 ml-auto"
-                                />
+                                
                             </div>
                             <div className="w-full overflow-x-auto no-scrollbar px-2">
                                 <div className="flex gap-3 2xl:gap-4 select-none cursor-grabbing">
@@ -215,22 +208,19 @@ export default function Body() {
                         </div>
 
                         <div className="bg-white rounded-2xl border p-6 hover:shadow-lg transition-shadow">
-                            <div className="flex gap-10 flex-row items-stretch justify-between w-full">
-                                {/* Left Side: Total Stake */}
+                            <div className="flex flex-row flex-wrap items-start justify-between w-full gap-2">
                                 <div>
                                     <h3 className="text-gray-900">Total Stake (SOL)</h3>
                                     <p className="text-neutral-800 font-roboto text-lg font-extrabold leading-6">
                                         400,924,311.34
                                     </p>
                                 </div>
-
-                                {/* Right Side: Link */}
                                 <a
                                     href="/analysis/solana_staking"
-                                    className="flex items-center gap-1 text-blue-500 font-roboto text-sm font-semibold"
+                                    className="flex items-center gap-0 text-blue-500 font-roboto text-sm font-semibold"
                                 >
-                                    <span className="text-neutral-500 not-italic font-normal ">
-                                        Skating Dashboard
+                                    <span className="text-blue-500 not-italic font-normal">
+                                        Staking Dashboard
                                     </span>
                                     <Image
                                         src="/right-arrow.svg"
@@ -261,7 +251,7 @@ export default function Body() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5 ">
                         {/* Left side - Dashboards (1/2 width on large screens) */}
                         <div className="flex flex-col items-stretch justify-start gap-4">
-                            <div className="rounded-xl border-border shadow-md overflow-hidden border">
+                            <div className="rounded-xl border-border shadow-md overflow-hidden border h-auto">
                                 <div className="flex flex-col gap-4 items-start justify-start bg-white">
                                     <div className="flex flex-row gap-1 items-center justify-between w-full flex-wrap px-4 pt-4">
                                         <h3 className="text-gray-900 text-sm font-semibold">Latest Transactions</h3>
@@ -708,10 +698,10 @@ export default function Body() {
                                             </table>
                                         </div>
                                     </div>
-                                    <div className="px-4 pb-4 pt-4 border-t border-border bg-neutral-100">
+                                    <div className="px-4 pb-4 pt-4 border-t border-border bg-neutral-50 w-full">
                                         <Link href={"/txs"} className="w-full">
-                                            <div className="flex gap-1 flex-row items-center justify-center flex-nowrap hover:text-blue-500 transition-colors duration-200 ">
-                                                <div className="not-italic text-xs leading-4 font-medium transition-colors uppercase text-neutral-700 hover:text-blue-500 w-full text-center">
+                                            <div className="flex gap-1 flex-row items-center justify-center flex-nowrap hover:text-blue-500 transition-colors duration-200">
+                                                <div className="not-italic text-xs leading-4 font-medium transition-colors uppercase text-gray-400 hover:text-blue-500 w-full text-center">
                                                     View All Transactions
                                                 </div>
                                             </div>
@@ -719,7 +709,7 @@ export default function Body() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="rounded-xl border-border shadow-md overflow-hidden border">
+                            <div className="rounded-xl border-border shadow-md overflow-hidden border h-auto">
                                 <div className="flex flex-col gap-4 items-start justify-start bg-white">
                                     <div className="flex flex-row gap-1 items-center justify-between w-full flex-wrap px-4 pt-4 bg-white">
                                         <h3 className="text-gray-900 text-sm font-semibold">Token Dashboard</h3>
@@ -938,11 +928,11 @@ export default function Body() {
                                             </table>
                                         </div>
                                     </div>
-                                    <div className="px-4 pb-4 pt-4 border-t border-border bg-neutral-100">
+                                    <div className="px-4 pb-4 pt-4 border-t border-border bg-neutral-50 w-full">
                                         <Link href={"/txs"} className="w-full">
                                             <div className="flex gap-1 flex-row items-center justify-center flex-nowrap hover:text-blue-500 transition-colors duration-200 ">
-                                                <div className="not-italic text-xs leading-4 font-medium transition-colors uppercase text-neutral-700 hover:text-blue-500 w-full text-center">
-                                                    View All Transactions
+                                                <div className="not-italic text-xs leading-4 font-medium transition-colors uppercase text-gray-400 hover:text-blue-500 w-full text-center">
+                                                    VISIT TOKEN DASHBOARD
                                                 </div>
                                             </div>
                                         </Link>

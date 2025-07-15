@@ -1,24 +1,18 @@
 "use client"
 
-import { act, useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis, TooltipProps } from "recharts"
 import { formatDistanceToNow } from "date-fns"
 
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from '@/components/ui/card'
 import {
-    ChartConfig,
     ChartContainer,
-    ChartLegend,
-    ChartLegendContent,
     ChartTooltip,
-    ChartTooltipContent,
 } from '@/components/ui/chart'
 
 function generatePingStats(range: "30m" | "2h" | "6h") {
