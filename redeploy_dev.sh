@@ -10,4 +10,4 @@ echo "🏗️ Building app..."
 npm run build
 
 echo "🚀 Restarting app with PM2..."
-pm2 restart clone-solscan || pm2 start ecosystem.config.js
+pm2 restart solscan-v1 || pm2 start ecosystem.config.js
