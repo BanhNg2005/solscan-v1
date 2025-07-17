@@ -23,7 +23,64 @@ jobs:
           password: ${{ secrets.DEV_DEPLOY_PASSWORD }}
           port: 22
           script: |
+            echo "=== Environment Setup ==="
+            whoami
+            echo "Home: $HOME"
+            
+            # Load NVM
             export NVM_DIR="$HOME/.nvm"
-            source "$HOME/.nvm/nvm.sh"
-            cd ${{ secrets.DEV_DEPLOY_PATH_FULL }}
-            bash redeploy_dev.sh
+            if [ -s "$NVM_DIR/nvm.sh" ]; then
+              source "$NVM_DIR/nvm.sh"
+            elif [ -s "/home/banh/.nvm/nvm.sh" ]; then
+              source "/home/banh/.nvm/nvm.sh"
+            else
+              echo "ERROR: NVM not found"
+              exit 1
+            fi
+            
+            echo "Node version: $(node --version)"
+            echo "NPM version: $(npm --version)"
+            
+            # Setup project directory
+            PROJECT_DIR="$HOME/clone-solscan"
+            echo "Project directory: $PROJECT_DIR"
+            
+            # Clone or update repository
+            if [ ! -d "$PROJECT_DIR" ]; then
+              echo "Cloning repository..."
+              git clone -b banh https://github.com/BanhNg2005/solscan-v1.git "$PROJECT_DIR"
+            else
+              echo "Repository exists, updating..."
+              cd "$PROJECT_DIR"
+              git fetch origin
+              git reset --hard origin/banh
+            fi
+            
+            # Change to project directory
+            cd "$PROJECT_DIR"
+            echo "Current directory: $(pwd)"
+            echo "Files in directory:"
+            ls -la
+            
+            # Run deployment (inline script since redeploy_dev.sh might not exist)
+            echo "=== Starting Deployment ==="
+            
+            echo "🔁 Pulling latest code..."
+            git pull origin banh
+            
+            echo "📦 Installing dependencies..."
+            npm install
+            
+            echo "🏗️ Building app..."
+            npm run build
+            
+            echo "🚀 Installing PM2 globally if needed..."
+            npm list -g pm2 >/dev/null 2>&1 || npm install -g pm2
+            
+            echo "🚀 Restarting app with PM2..."
+            pm2 restart clone-solscan || pm2 start ecosystem.config.js --name clone-solscan
+            
+            echo "✅ Deployment completed!"
+            
+            # Show PM2 status
+            pm2 status
