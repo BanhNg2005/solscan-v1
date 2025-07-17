@@ -78,7 +78,7 @@ jobs:
             npm list -g pm2 >/dev/null 2>&1 || npm install -g pm2
             
             echo "🚀 Restarting app with PM2..."
-            pm2 restart clone-solscan || pm2 start ecosystem.config.js --name clone-solscan
+            pm2 restart solscan-v1 || pm2 start ecosystem.config.js --name solscan-v1
             
             echo "✅ Deployment completed!"
             
