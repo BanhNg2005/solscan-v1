@@ -22,7 +22,26 @@ jobs:
           password: ${{ secrets.DEV_DEPLOY_PASSWORD }}
           port: 22
           script: |
-            export NVM_DIR=/home/${{ secrets.DEV_DEPLOY_USER }}/.nvm
-            source /home/${{ secrets.DEV_DEPLOY_USER }}/.nvm/nvm.sh
-            cd ${{ secrets.DEV_DEPLOY_PATH_FULL }}
-            bash redeploy_dev.sh
+            echo "=== Testing NVM paths ==="
+            echo "HOME: $HOME"
+            echo "USER: $USER"
+            
+            # Test different NVM paths
+            if [ -f "$HOME/.nvm/nvm.sh" ]; then
+              echo "✅ Found NVM at: $HOME/.nvm/nvm.sh"
+              source "$HOME/.nvm/nvm.sh"
+            elif [ -f "/home/banh/.nvm/nvm.sh" ]; then
+              echo "✅ Found NVM at: /home/banh/.nvm/nvm.sh"
+              source "/home/banh/.nvm/nvm.sh"
+            else
+              echo "❌ NVM not found in expected locations"
+              echo "Contents of ~/.nvm/:"
+              ls -la ~/.nvm/ || echo "~/.nvm/ does not exist"
+              exit 1
+            fi
+            
+            echo "=== Testing Node/NPM ==="
+            which node || echo "Node not in PATH"
+            which npm || echo "NPM not in PATH"
+            node --version || echo "Node command failed"
+            npm --version || echo "NPM command failed"
