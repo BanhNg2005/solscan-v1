@@ -4,7 +4,7 @@ echo "🔁 Pulling latest code..."
 git pull origin banh
 
 echo "📦 Installing dependencies..."
-npm ci
+npm run install
 
 echo "🏗️ Building app..."
 npm run build
