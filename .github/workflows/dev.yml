@@ -72,17 +72,35 @@ jobs:
             echo "=== Deploying ==="
             cd "$PROJECT_DIR"
             echo "Current directory: $(pwd)"
+            echo "Files in directory:"
             ls -la
             
-            # Run deployment
+            # Pull latest changes first
+            echo "=== Pulling latest code ==="
+            git pull origin banh
+            
+            # Check if redeploy_dev.sh exists and run it
             if [ -f "redeploy_dev.sh" ]; then
+              echo "Found redeploy_dev.sh, making it executable..."
               chmod +x redeploy_dev.sh
+              echo "Running deployment script..."
               bash redeploy_dev.sh
             else
-              echo "redeploy_dev.sh not found, running manual deployment..."
-              git pull origin banh
+              echo "redeploy_dev.sh not found in $(pwd)"
+              echo "Available files:"
+              find . -name "*.sh" -type f 2>/dev/null || echo "No .sh files found"
+              echo "Running manual deployment..."
+              
+              # Manual deployment steps
+              echo "📦 Installing dependencies..."
               npm install
+              
+              echo "🏗️ Building app..."
               npm run build
-              npm install -g pm2 2>/dev/null || echo "PM2 already installed"
-              pm2 restart clone-solscan || pm2 start ecosystem.config.js
+              
+              echo "🚀 Installing/updating PM2..."
+              npm install -g pm2 2>/dev/null || echo "PM2 installation skipped"
+              
+              echo "🚀 Restarting app with PM2..."
+              pm2 restart clone-solscan || pm2 start ecosystem.config.js --name clone-solscan
             fi
