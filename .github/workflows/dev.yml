@@ -21,12 +21,8 @@ jobs:
           username: ${{ secrets.DEV_DEPLOY_USER }}
           password: ${{ secrets.DEV_DEPLOY_PASSWORD }}
           port: 22
-          timeout: 60s
-          command_timeout: 30m
           script: |
-            whoami
-            pwd
-            echo "Current user: $(whoami)"
-            echo "Home directory: $HOME"
-            echo "Node version: $(node --version 2>&1 || echo 'Node not found')"
-            echo "NPM version: $(npm --version 2>&1 || echo 'NPM not found')"
+            export NVM_DIR=/home/${{ secrets.DEV_DEPLOY_USER }}/.nvm
+            source /home/${{ secrets.DEV_DEPLOY_USER }}/.nvm/nvm.sh
+            cd ${{ secrets.DEV_DEPLOY_PATH_FULL }}
+            bash redeploy_dev.sh
