@@ -20,10 +20,54 @@ jobs:
           host: ${{ secrets.DEV_DEPLOY_HOST }}
           username: ${{ secrets.DEV_DEPLOY_USER }}
           key: ${{ secrets.DEV_DEPLOY_KEY }}
-          password: ${{ secrets.DEV_DEPLOY_PASSWORD }}
           port: 22
           script: |
+            echo "=== Debug Info ==="
+            whoami
+            pwd
+            echo "Home: $HOME"
+            
+            echo "=== Checking NVM ==="
+            ls -la ~/.nvm/ || echo "NVM directory not found"
+            
+            echo "=== Loading NVM ==="
             export NVM_DIR="$HOME/.nvm"
-            source "$HOME/.nvm/nvm.sh"
-            cd ${{ secrets.DEV_DEPLOY_PATH_FULL }}
-            bash redeploy_dev.sh
+            if [ -s "$NVM_DIR/nvm.sh" ]; then
+              source "$NVM_DIR/nvm.sh"
+              echo "NVM loaded successfully"
+            else
+              echo "NVM not found, trying alternative path..."
+              if [ -s "/home/banh/.nvm/nvm.sh" ]; then
+                source "/home/banh/.nvm/nvm.sh"
+                echo "NVM loaded from alternative path"
+              else
+                echo "ERROR: NVM not found in any expected location"
+                exit 1
+              fi
+            fi
+            
+            echo "=== Node Check ==="
+            node --version || echo "Node not available"
+            npm --version || echo "NPM not available"
+            
+            echo "=== Project Directory ==="
+            echo "Target directory: ${{ secrets.DEV_DEPLOY_PATH_FULL }}"
+            if [ -d "${{ secrets.DEV_DEPLOY_PATH_FULL }}" ]; then
+              cd "${{ secrets.DEV_DEPLOY_PATH_FULL }}"
+              echo "Current directory: $(pwd)"
+              echo "Files in directory:"
+              ls -la
+              
+              if [ -f "redeploy_dev.sh" ]; then
+                echo "=== Running deployment script ==="
+                bash redeploy_dev.sh
+              else
+                echo "ERROR: redeploy_dev.sh not found in $(pwd)"
+                echo "Available files:"
+                ls -la *.sh 2>/dev/null || echo "No .sh files found"
+              fi
+            else
+              echo "ERROR: Directory ${{ secrets.DEV_DEPLOY_PATH_FULL }} does not exist"
+              echo "Available directories in home:"
+              ls -la ~/ || echo "Cannot list home directory"
+            fi
