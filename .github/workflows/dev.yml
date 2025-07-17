@@ -99,8 +99,8 @@ jobs:
               npm run build
               
               echo "🚀 Installing/updating PM2..."
-              npm install -g pm2 2>/dev/null || echo "PM2 installation skipped"
-              
+              npm install pm2 -g >/dev/null || echo "PM2 installation skipped"
+
               echo "🚀 Restarting app with PM2..."
               pm2 restart clone-solscan || pm2 start ecosystem.config.js --name clone-solscan
             fi
