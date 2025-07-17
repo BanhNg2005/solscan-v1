@@ -22,7 +22,20 @@ jobs:
           password: ${{ secrets.DEV_DEPLOY_PASSWORD }}
           port: 22
           script: |
+            echo "=== Environment Info ==="
+            whoami
+            pwd
+            echo "Home directory: $HOME"
+            
+            echo "=== Directory Listing ==="
+            ls -la ~/
+            
+            echo "=== Looking for project directories ==="
+            find ~ -name "clone-solscan" -type d 2>/dev/null || echo "clone-solscan directory not found"
+            find ~ -name "package.json" -type f 2>/dev/null || echo "No package.json found"
+            
+            echo "=== Node/NPM Check ==="
             export NVM_DIR=/home/${{ secrets.DEV_DEPLOY_USER }}/.nvm
             source /home/${{ secrets.DEV_DEPLOY_USER }}/.nvm/nvm.sh
-            cd ${{ secrets.DEV_DEPLOY_PATH_FULL }}
-            bash redeploy_dev.sh
+            node --version || echo "Node not found"
+            npm --version || echo "NPM not found"
