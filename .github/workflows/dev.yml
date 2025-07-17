@@ -8,7 +8,7 @@ name: DEV CI/CD UI V2
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ['dev-2']
+    branches: ['banh']
 
 jobs:
   deploy:

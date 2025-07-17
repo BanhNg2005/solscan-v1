@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "🔁 Pulling latest code..."
-git pull origin dev-2
+git pull origin banh
 
 echo "📦 Installing dependencies..."
 npm install
