@@ -23,52 +23,66 @@ jobs:
           password: ${{ secrets.DEV_DEPLOY_PASSWORD }}
           port: 22
           script: |
-            echo "=== Debug Info ==="
+            echo "=== Initial Setup ==="
             whoami
-            pwd
             echo "Home: $HOME"
             
-            echo "=== Checking NVM ==="
-            ls -la ~/.nvm/ || echo "NVM directory not found"
-            
-            echo "=== Loading NVM ==="
-            export NVM_DIR="$HOME/.nvm"
-            if [ -s "$NVM_DIR/nvm.sh" ]; then
-              source "$NVM_DIR/nvm.sh"
-              echo "NVM loaded successfully"
+            echo "=== Installing/Setting up NVM in user home ==="
+            # Install NVM in the current user's home if it doesn't exist
+            if [ ! -d "$HOME/.nvm" ]; then
+              echo "Installing NVM for current user..."
+              curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+              export NVM_DIR="$HOME/.nvm"
             else
-              echo "NVM not found, trying alternative path..."
-              if [ -s "/home/banh/.nvm/nvm.sh" ]; then
-                source "/home/banh/.nvm/nvm.sh"
-                echo "NVM loaded from alternative path"
-              else
-                echo "ERROR: NVM not found in any expected location"
-                exit 1
-              fi
+              export NVM_DIR="$HOME/.nvm"
             fi
             
-            echo "=== Node Check ==="
-            node --version || echo "Node not available"
-            npm --version || echo "NPM not available"
-            
-            echo "=== Project Directory ==="
-            echo "Target directory: ${{ secrets.DEV_DEPLOY_PATH_FULL }}"
-            if [ -d "${{ secrets.DEV_DEPLOY_PATH_FULL }}" ]; then
-              cd "${{ secrets.DEV_DEPLOY_PATH_FULL }}"
-              echo "Current directory: $(pwd)"
-              echo "Files in directory:"
-              ls -la
-              
-              if [ -f "redeploy_dev.sh" ]; then
-                echo "=== Running deployment script ==="
-                bash redeploy_dev.sh
-              else
-                echo "ERROR: redeploy_dev.sh not found in $(pwd)"
-                echo "Available files:"
-                ls -la *.sh 2>/dev/null || echo "No .sh files found"
-              fi
+            # Try to load NVM from multiple locations
+            if [ -s "$HOME/.nvm/nvm.sh" ]; then
+              echo "Loading NVM from $HOME/.nvm/nvm.sh"
+              source "$HOME/.nvm/nvm.sh"
+            elif [ -s "/home/banh/.nvm/nvm.sh" ]; then
+              echo "Loading NVM from /home/banh/.nvm/nvm.sh"
+              source "/home/banh/.nvm/nvm.sh"
+              export NVM_DIR="/home/banh/.nvm"
             else
-              echo "ERROR: Directory ${{ secrets.DEV_DEPLOY_PATH_FULL }} does not exist"
-              echo "Available directories in home:"
-              ls -la ~/ || echo "Cannot list home directory"
+              echo "ERROR: Cannot find NVM installation"
+              exit 1
+            fi
+            
+            # Install Node if not available
+            if ! command -v node >/dev/null 2>&1; then
+              echo "Installing Node.js..."
+              nvm install --lts
+              nvm use --lts
+            fi
+            
+            echo "=== Verifying Node/NPM ==="
+            node --version || (echo "ERROR: Node still not available" && exit 1)
+            npm --version || (echo "ERROR: NPM still not available" && exit 1)
+            
+            echo "=== Setting up project ==="
+            PROJECT_DIR="$HOME/clone-solscan"
+            
+            if [ ! -d "$PROJECT_DIR" ]; then
+              echo "Cloning repository to $PROJECT_DIR..."
+              git clone -b banh https://github.com/BanhNg2005/solscan-v1 "$PROJECT_DIR"
+            fi
+            
+            echo "=== Deploying ==="
+            cd "$PROJECT_DIR"
+            echo "Current directory: $(pwd)"
+            ls -la
+            
+            # Run deployment
+            if [ -f "redeploy_dev.sh" ]; then
+              chmod +x redeploy_dev.sh
+              bash redeploy_dev.sh
+            else
+              echo "redeploy_dev.sh not found, running manual deployment..."
+              git pull origin banh
+              npm install
+              npm run build
+              npm install -g pm2 2>/dev/null || echo "PM2 already installed"
+              pm2 restart clone-solscan || pm2 start ecosystem.config.js
             fi
