@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./Header";
 import DeFiCharts from "./DeFiCharts";
 import TPSCharts from "./TPSCharts";
@@ -11,7 +11,7 @@ import { NetworkCharts } from "./NetworkCharts";
 export default function Body() {
     // Shared state for time range across TPS and Network charts
     const [timeRange, setTimeRange] = useState<"30m" | "2h" | "6h">("30m");
-
+    
     return (
         <div className="w-full flex-1 min-h min-h-screen bg-gray-50 flex-col">
             < Header />
