@@ -6,6 +6,7 @@ import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { authAPI } from "@/services/authAPI";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -19,7 +20,7 @@ export default function Header() {
   const { setTheme } = useTheme();
   const [search, setSearch] = useState("");
   const [user, setUser] = useState<{
-    id: string;
+    userId: number;
     email: string;
   } | null>(null);
   const router = useRouter();
@@ -28,10 +29,9 @@ export default function Header() {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await fetch('/api/auth/me');
-                if (response.ok) {
-                    const data = await response.json();
-                    setUser(data.user);
+                const result = await authAPI.verify();
+                if (result.user) {
+                    setUser(result.user);
                 }
             } catch (error) {
                 console.error('Auth check failed:', error);
@@ -43,11 +43,8 @@ export default function Header() {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('/api/auth/logout', {
-                method: 'POST',
-            });
-
-            if (response.ok) {
+            const result = await authAPI.logout();
+            if (!result.error) {
                 setUser(null);
                 router.push('/user/signin');
             }
@@ -71,10 +68,10 @@ export default function Header() {
                 <div className="flex items-center gap-4">
                   <Link href="/">
                     <Image
-                      src="/solscan.png"
+                      src="/branding-solscan-logo-dark.svg"
                       alt="Logo"
-                      width={80}
-                      height={10}
+                      width={100}
+                      height={20}
                     />
                   </Link>
                   <div className="flex rounded-lg px-3 py-2 bg-white/20 backdrop-blur-md relative z-10">
@@ -451,18 +448,16 @@ export default function Header() {
                         </button>
                         
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="bg-white border border-gray-200 shadow-lg p-2">
-                        <DropdownMenuItem onClick={handleLogout}>
-                            <div className="flex items-center px-4 py-3 hover:bg-gray-100 transition-colors rounded-md">
-                                Logout
-                            </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild className="flex items-center px-4 py-3 hover:bg-gray-100 transition-colors rounded-md">
-                            <Link href="/user/profile">
-                                Profile
-                            </Link> 
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
+                    <DropdownMenuContent align="start" className="bg-white border border-gray-200 shadow-lg p-2 w-[150px]">
+    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+        Logout
+    </DropdownMenuItem>
+    <DropdownMenuItem asChild>
+        <Link href="/user/profile" className="cursor-pointer">
+            Profile
+        </Link> 
+    </DropdownMenuItem>
+</DropdownMenuContent>
                 </DropdownMenu>
             ) : (
                 <button className="flex cursor-pointer select-none items-center rounded-lg px-4 py-3 text-sm leading-6 outline-none text-white">
