@@ -23,35 +23,7 @@ jobs:
           password: ${{ secrets.DEV_DEPLOY_PASSWORD }}
           port: 22
           script: |
-            # Load NVM
             export NVM_DIR="$HOME/.nvm"
-            if [ -s "$NVM_DIR/nvm.sh" ]; then
-              source "$NVM_DIR/nvm.sh"
-            elif [ -s "/home/banh/.nvm/nvm.sh" ]; then
-              source "/home/banh/.nvm/nvm.sh"
-            else
-              echo "ERROR: NVM not found"
-              exit 1
-            fi
-            
-            # Setup project directory
-            PROJECT_DIR="$HOME/clone-solscan"
-            
-            # Clone or update repository
-            if [ ! -d "$PROJECT_DIR" ]; then
-              git clone -b banh https://github.com/BanhNg2005/solscan-v1.git "$PROJECT_DIR"
-            else
-              cd "$PROJECT_DIR"
-              git fetch origin
-              git reset --hard origin/banh
-            fi
-            
-            # Change to project directory
-            cd "$PROJECT_DIR"
-            
-            # Deploy
-            git pull origin banh
-            npm install
-            npm run build
-            npm list -g pm2 >/dev/null 2>&1 || npm install -g pm2
-            pm2 restart clone-solscan || pm2 start ecosystem.config.js --name clone-solscan
+            source "$HOME/.nvm/nvm.sh"
+            cd ${{ secrets.DEV_DEPLOY_PATH_FULL }}
+            bash redeploy_dev.sh
