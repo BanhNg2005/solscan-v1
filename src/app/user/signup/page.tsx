@@ -7,6 +7,7 @@ import Joi from "joi";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { authAPI } from '@/services/authAPI';
 
 export default function SignUp() {
     const schema = Joi.object({
@@ -38,35 +39,40 @@ export default function SignUp() {
         formState: { errors },
     } = useForm({
         resolver: joiResolver(schema),
-    }); const [showPassword, setShowPassword] = useState(false);
+    });
+    
+    const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
+    
     const router = useRouter();
 
-
     const onSubmit = async (data: any) => {
+        setIsLoading(true);
+        setError('');
+        setSuccess('');
+        
         try {
-            const response = await fetch("/api/auth/signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                alert("User created successfully");
-                // redirect to login
-                router.push("/user/signin");
+            const result = await authAPI.signup(data.email, data.password);
+            
+            if (result.error) {
+                setError(result.error);
             } else {
-                alert(result.error || "An error occurred");
+                setSuccess("Account created successfully! Redirecting to sign in...");
+                setTimeout(() => {
+                    router.push("/user/signin");
+                }, 2000);
             }
         } catch (error) {
             console.error("Error during signup:", error);
-            alert("An error occurred");
+            setError("An error occurred during signup. Please try again later.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -84,11 +90,18 @@ export default function SignUp() {
 
                     <div className="flex flex-row flex-wrap justify-start grow-0 shrink-0 basis-full min-w-0 box-border gap-y-4 w-full h-full">
                         <div className="xl:max-w-1/2 md:max-w-full max-w-full xl:flex-[0_0_50%] md:flex-[0_0_100%] flex-[0_0_100%] block relative box-border my-0 p-0">
-                            Solscan (Placeholder for the logo)
+                            <div className="flex gap-1 flex-row flext-wrap justify-center items-center h-full w-full">
+                                <Image
+                                    src="/branding-solscan-logo-dark.svg"
+                                    alt="Solscan Logo"
+                                    width={350}
+                                    height={56}
+                                />
+                            </div>
                         </div>
 
                         <div className="xl:max-w-1/2 md:max-w-full max-w-full xl:flex-[0_0_50%] md:flex-[0_0_100%] flex-[0_0_100%] block relative box-border my-0 p-0">
-                            <div className="flex flex-col gap-1 items-stretch justify-between bg-neutral-100 w-full h-full py-[25px] px-[15px] lg:px-[70px] xl:px-[100px] rounded-tl-none xl:rounded-tl-[64px] rounded-bl-none xl:rounded-bl-[64px]">
+                            <div className="flex flex-col gap-1 items-stretch justify-start bg-neutral-100 w-full h-full py-4 px-[15px] lg:px-[70px] xl:px-[100px] rounded-tl-none xl:rounded-tl-[64px] rounded-bl-none xl:rounded-bl-[64px]">
                                 <div className="flex flex-row flex-wrap gap-1 justify-between items-center">
                                     <div className="flex flex-row flex-wrap gap-1 items-center justify-start cursor-pointer" onClick={() => window.history.back()}>
                                         <ArrowLeft className="cursor-pointer text-xs text-blue-500 hover:text-blue-600 transiton duration-200 w-4 h-4" />
@@ -101,7 +114,7 @@ export default function SignUp() {
                                         </div>
                                     </a>
                                 </div>
-                                <div className="flex flex-col gap-6 items-center justify-start">
+                                <div className="flex flex-col gap-6 items-center justify-start mt-50">
                                     <div className="flex flex-col gap-1 items-center justify-start">
                                         <div className="flex items-center flex-col justify-start gap-1">
                                             <h1 className="text-lg font-bold text-neutral-800 not-italic leading-7">Create new account</h1>
@@ -111,6 +124,18 @@ export default function SignUp() {
                                 </div>
                                 <form onSubmit={handleSubmit(onSubmit)} className="w-full">
                                     <div className="flex flex-col gap-4 items-stretch justify-start">
+                                        {error && (
+                                            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                                                {error}
+                                            </div>
+                                        )}
+                                        
+                                        {success && (
+                                            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+                                                {success}
+                                            </div>
+                                        )}
+                                        
                                         <div className="grid w-full gap-1.5 items-center">
                                             <label className="not-italic text-neutral-700 font-medium text-sm">
                                                 Email *
@@ -144,10 +169,10 @@ export default function SignUp() {
                                                         <Eye onClick={togglePasswordVisibility} />)}</div>
                                                 </span>
 
+                                            </div>
                                                 {errors.password && (
                                                     <p className="mt-1 text-sm text-red-600">{errors.password.message as string}</p>
                                                 )}
-                                            </div>
 
                                         </div>
 
@@ -170,16 +195,18 @@ export default function SignUp() {
                                                 </span>
 
 
+                                            </div>
                                                 {errors.confirmPassword && (
                                                     <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message as string}</p>
                                                 )}
-                                            </div>
                                         </div>
 
                                         <button
+                                            type="submit"
+                                            disabled={isLoading}
                                             className="max-w-full ml-auto rounded-md bg-fuchsia-600 px-6 py-2 text-white font-semibold text-sm hover:bg-fuchsia-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                                         >
-                                            Register
+                                            {isLoading ? 'Creating account...' : 'Register'}
                                         </button>
                                     </div>
                                 </form>

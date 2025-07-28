@@ -7,6 +7,7 @@ import { useState } from "react";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Image from "next/image";
 import { Eye, EyeOff, ArrowLeft, House } from 'lucide-react';
+import { authAPI } from '@/services/authAPI';
 
 export default function SignIn() {
     const schema = Joi.object({
@@ -20,7 +21,7 @@ export default function SignIn() {
         })
     });
 
-    const { register, handleSubmit } = useForm({
+    const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: joiResolver(schema),
         mode: "onChange",
         defaultValues: {
@@ -28,42 +29,35 @@ export default function SignIn() {
             password: ""
         }
     });
+    
     const [showPassword, setShowPassword] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
-    const { formState: { errors } } = useForm({
-        resolver: joiResolver(schema),
-        mode: "onChange",
-        defaultValues: {
-            email: "",
-            password: ""
-        }
-    });
+    
     const router = useRouter();
 
     const onSubmit = async (data: any) => {
+        setIsLoading(true);
+        setError('');
+        
         try {
-            const response = await fetch("/api/auth/signin", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(data)
-            });
-            if (response.ok) {
-                const result = await response.json();
+            const result = await authAPI.signin(data.email, data.password);
+            
+            if (result.error) {
+                setError(result.error);
+            } else {
                 console.log("Signin successful:", result);
                 router.push("/");
             }
-            else {
-                const error = await response.json();
-                console.error("Signin failed:", error);
-                alert(error.error || "Signin failed");
-            }
         } catch (error) {
             console.error("Error during signin:", error);
-            alert("An error occurred during signin. Please try again later.");
+            setError("An error occurred during signin. Please try again later.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -81,7 +75,14 @@ export default function SignIn() {
 
                     <div className="flex flex-row flex-wrap justify-start grow-0 shrink-0 basis-full min-w-0 box-border gap-y-4 w-full h-full">
                         <div className="xl:max-w-1/2 md:max-w-full max-w-full xl:flex-[0_0_50%] md:flex-[0_0_100%] flex-[0_0_100%] block relative box-border my-0 p-0">
-                            Solscan (Placeholder for the logo)
+                            <div className="flex gap-1 flex-row flext-wrap justify-center items-center h-full w-full">
+                                                            <Image
+                                                                src="/branding-solscan-logo-dark.svg"
+                                                                alt="Solscan Logo"
+                                                                width={350}
+                                                                height={56}
+                                                            />
+                                                        </div>
                         </div>
 
                         <div className="xl:max-w-1/2 md:max-w-full max-w-full xl:flex-[0_0_50%] md:flex-[0_0_100%] flex-[0_0_100%] block relative box-border my-0 p-0">
@@ -107,6 +108,12 @@ export default function SignIn() {
                                     </div>
                                     <form onSubmit={handleSubmit(onSubmit)} className="w-full">
                                         <div className="flex flex-col gap-4 items-stretch justify-start">
+                                            {error && (
+                                                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                                                    {error}
+                                                </div>
+                                            )}
+                                            
                                             <div className="grid w-full gap-1.5 items-center">
                                                 <label className="not-italic text-neutral-700 font-medium text-sm">
                                                     Email *
@@ -132,7 +139,7 @@ export default function SignIn() {
                                                         type={showPassword ? "text" : "password"}
                                                         id="password"
                                                         {...register("password")}
-                                                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 relative"
+                                                        className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 relative pr-10"
                                                         autoComplete="off"
                                                     />
                                                     <span className="absolute top-0 right-2 h-full flex items-center text-md">
@@ -140,19 +147,19 @@ export default function SignIn() {
                                                             <Eye onClick={togglePasswordVisibility} />)}</div>
                                                     </span>
 
+                                                </div>
                                                     {errors.password && (
                                                         <p className="mt-1 text-sm text-red-600">{errors.password.message as string}</p>
                                                     )}
-                                                </div>
 
                                             </div>
 
-
-
                                             <button
+                                                type="submit"
+                                                disabled={isLoading}
                                                 className="w-full ml-auto rounded-md bg-fuchsia-600 px-6 py-3 text-white font-semibold text-sm hover:bg-fuchsia-700 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer gap-2"
                                             >
-                                                Sign in
+                                                {isLoading ? 'Signing in...' : 'Sign in'}
                                             </button>
                                             <div className="flex flex-row flex-wrap gap-1 justify-between items-center">
                                                 <div className="flex flex-row flex-wrap gap-1 items-center justify-start cursor-pointer" onClick={() => router.push("/user/forgot-password")}>
