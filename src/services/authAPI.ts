@@ -1,5 +1,10 @@
 // API service for connecting to the Node.js backend
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+// Determine backend URL: prefer env var, else use current origin in production, or localhost in non-browser
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+  ? process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, '')
+  : (typeof window !== 'undefined'
+      ? window.location.origin
+      : 'http://localhost:3001');
 
 export interface AuthResponse {
     message?: string;
