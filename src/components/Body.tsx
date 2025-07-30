@@ -7,11 +7,35 @@ import Header from "./Header";
 import DeFiCharts from "./DeFiCharts";
 import TPSCharts from "./TPSCharts";
 import { NetworkCharts } from "./NetworkCharts";
+import { solanaAPI } from "@/services/solanaApi";
 
 export default function Body() {
     // Shared state for time range across TPS and Network charts
     const [timeRange, setTimeRange] = useState<"30m" | "2h" | "6h">("30m");
+    const [blockHeight, setBlockHeight] = useState<number | null>(null);
+    const [slotHeight, setSlotHeight] = useState<number | null>(null);
     
+    useEffect(() => {
+        const fetchNetworkData = async () => {
+            try {
+                const data = await solanaAPI.network();
+                if (data.blockHeight) {
+                    setBlockHeight(data.blockHeight);
+                }
+                if (data.slotHeight) {
+                    setSlotHeight(data.slotHeight);
+                }
+            } catch (error) {
+                console.error("Failed to fetch network data:", error);
+            }
+        };
+
+        fetchNetworkData(); // Fetch on initial load
+        const interval = setInterval(fetchNetworkData, 15000); // Refresh every 15 seconds
+
+        return () => clearInterval(interval); // Cleanup on component unmount
+    }, []);
+
     return (
         <div className="w-full flex-1 min-h min-h-screen bg-gray-50 flex-col">
             < Header />
@@ -184,11 +208,16 @@ export default function Body() {
                                     <div className="flex flex-row flex-wrap justify-start grow-0 shrink-0 items-stretch w-full">
                                         <div className="max-w-24/24 flex-12/24 box-border block relative">
                                             <p className="text-neutral-500 font-roboto text-sm font-normal leading-6">Block Height</p>
-                                            <p className="font-roberto text-sm font-normal leading-6">328993339</p>
+                                            <p className="font-roberto text-sm font-normal leading-6">
+                                                {blockHeight !== null ? blockHeight : "Loading..."}
+                                                
+                                            </p>
                                         </div>
                                         <div className="max-w-24/24 flex-12/24 box-border block relative">
                                             <p className="text-neutral-500 font-roboto text-sm font-normal leading-6">Slot Height</p>
-                                            <p className="font-roberto text-sm font-normal leading-6">350793540</p>
+                                            <p className="font-roberto text-sm font-normal leading-6">
+                                                {slotHeight !== null ? slotHeight : "Loading..."}
+                                            </p>
                                         </div>
                                     </div>
                                     <div data-orientation="horizontal" className="w-full h-0.25 bg-gray-200 shrink-0" role="none">
@@ -250,7 +279,7 @@ export default function Body() {
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5 ">
                         {/* Left side - Dashboards (1/2 width on large screens) */}
-                        <div className="flex flex-col items-stretch justify-start gap-4">
+                        <div className="flex flex-col items-stretch justify-start gap-2 md:gap-4">
                             <div className="rounded-xl border-border shadow-md overflow-hidden border h-auto">
                                 <div className="flex flex-col gap-4 items-start justify-start bg-white">
                                     <div className="flex flex-row gap-1 items-center justify-between w-full flex-wrap px-4 pt-4">
