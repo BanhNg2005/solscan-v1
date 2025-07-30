@@ -1,106 +1,66 @@
+// connect from NodeJS
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
-export interface SolSupply {
-  total: number;
-  circulating: number;
-  nonCirculating: number;
-  circulatingPercent: number;
-  nonCirculatingPercent: number;
+export interface AuthResponse {
+    message?: string;
+    userId?: number;
+    error?: string;
 }
 
-export interface EpochInfo {
-  epoch: number;
-  slotIndex: number;
-  slotsInEpoch: number;
-  absoluteSlot: number;
-  blockHeight: number;
-  transactionCount: number;
-  progressPercent: number;
-  timeRemaining: {
-    days: number;
-    hours: number;
-    minutes: number;
-    seconds: number;
-  };
+export interface VerifyResponse {
+    message?: string;
+    user?: {
+        userId: number;
+        email: string;
+    };
+    error?: string;
 }
 
-export interface NetworkStats {
-  totalTransactions: number;
-  blockHeight: number;
-  slotHeight: number;
-  tps: number;
-  trueTps: number;
-}
+export const solanaAPI = {
+    /**
+     * Get Solana price
+     */
+    price: async (): Promise<{ price?: number; error?: string }> => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/sol/price`, {
+                credentials: 'include'
+            });
 
-export interface StakeInfo {
-  totalStake: number;
-  currentStake: number;
-  currentStakePercent: number;
-  delinquentStake: number;
-  delinquentStakePercent: number;
-}
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Price fetch error:', error);
+            return { price: undefined, error: 'Network error' };
+        }
+    },
 
-export interface SolanaData {
-  solSupply: SolSupply;
-  epochInfo: EpochInfo;
-  networkStats: NetworkStats;
-  stakeInfo: StakeInfo;
-  timestamp: number;
-}
+    change24h: async (): Promise<{ change24h?: number; error?: string }> => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/sol/price`, {
+                credentials: 'include'
+            });
 
-class SolanaApiService {
-  private async fetchData<T>(endpoint: string): Promise<T> {
-    try {
-      const response = await fetch(`${API_BASE_URL}/solana/${endpoint}`);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const result = await response.json();
-      
-      if (!result.success) {
-        throw new Error(result.error || 'API request failed');
-      }
-      
-      return result.data;
-    } catch (error) {
-      console.error(`Error fetching ${endpoint}:`, error);
-      throw error;
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Change fetch error:', error);
+            return { change24h: undefined, error: 'Network error' };
+        }
+    },
+
+    network: async (): Promise<{ slotHeight?: number; blockHeight?: number; error?: string; }> => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/sol/network`, {
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Network fetch error:', error);
+            return { slotHeight: undefined, blockHeight: undefined, error: 'Network error' };
+        }
     }
-  }
-
-  async getSolSupply(): Promise<SolSupply> {
-    return this.fetchData<SolSupply>('supply');
-  }
-
-  async getEpochInfo(): Promise<EpochInfo> {
-    return this.fetchData<EpochInfo>('epoch');
-  }
-
-  async getNetworkStats(): Promise<NetworkStats> {
-    return this.fetchData<NetworkStats>('network');
-  }
-
-  async getStakeInfo(): Promise<StakeInfo> {
-    return this.fetchData<StakeInfo>('stake');
-  }
-
-  async getAllData(): Promise<SolanaData> {
-    return this.fetchData<SolanaData>('all');
-  }
-}
-
-export const solanaApi = new SolanaApiService();
-
-// Utility functions for formatting
-export const formatNumber = (num: number, decimals: number = 2): string => {
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  }).format(num);
 };
 
-export const formatTimeRemaining = (time: { days: number; hours: number; minutes: number; seconds: number }): string => {
-  return `${time.days}d ${time.hours}h ${time.minutes}m ${time.seconds}s`;
-};
+export default solanaAPI;
