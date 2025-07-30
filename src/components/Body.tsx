@@ -1027,7 +1027,7 @@ export default function Body() {
                             </div>
                         </div>
                     </div>
-                    <div className="flex flex-row flex-wrap justify-start grow-0 shrink-0 basis-full min-w-0 w-full box-border py-6 lg:py-8 border-t">
+                    <div className="flex flex-row flex-wrap justify-start grow-0 shrink-0 basis-full min-w-0 box-border py-6 lg:py-8 w-full gap-y-4">
                         <div className="max-w-4xl lg:max-w-7xl flex-1 lg:flex block relative box-border my-0 px-1">
                             <div className="flex flex-col gap-2 items-stretch justify-start pr-0 lg:pr-8">
                                 <div className="flex flex-row flex-wrap gap-2 items-center justify-start">
@@ -1054,7 +1054,7 @@ export default function Body() {
                                 <div className="not-italic text-neutral-700 font-medium text-sm leading-6">
                                     Company
                                 </div>
-                                <a href="/branding" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Branding</a>
+                                <a href="branding" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Branding</a>
                                 <a href="contactus" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Contact Us</a>
                                 <a href="terms-of-service" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Terms of Service</a>
                                 <a href="privacy-policy" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Privacy Policy</a>
@@ -1064,25 +1064,23 @@ export default function Body() {
                         <div className="max-w-1/2 sm:max-w-1/2 md:max-w-1/3 lg:max-w-[20.83%] basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-[20.83%] block relative box-border my-0 px-1">
                             <div className="flex flex-col gap-3 items-stretch justify-start">
                                 <div className="not-italic text-neutral-700 font-medium text-sm leading-6">
-                                    Company
+                                    Community
                                 </div>
-                                <a href="/branding" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Branding</a>
-                                <a href="contactus" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Contact Us</a>
-                                <a href="terms-of-service" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Terms of Service</a>
-                                <a href="privacy-policy" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Privacy Policy</a>
-                                <a href="bugboutline" target="_blank" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Bug Bounty</a>
+                                <a href="https://pro-api.solscan.io/pro-api-docs/v2.0" target="_blank" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">API Docs</a>
+                                <a href="https://docs.solscan.io/" target="_blank" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Solscan Docs</a>
+                                <a href="https://info.solscan.io/" target="_blank" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Knowledge Base</a>
                             </div>
                         </div>
                         <div className="max-w-1/2 sm:max-w-1/2 md:max-w-1/3 lg:max-w-[20.83%] basis-1/2 sm:basis-1/2 md:basis-1/3 lg:basis-[20.83%] block relative box-border my-0 px-1">
                             <div className="flex flex-col gap-3 items-stretch justify-start">
                                 <div className="not-italic text-neutral-700 font-medium text-sm leading-6">
-                                    Company
+                                    Products & Services
                                 </div>
-                                <a href="/branding" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Branding</a>
-                                <a href="contactus" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Contact Us</a>
-                                <a href="terms-of-service" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Terms of Service</a>
-                                <a href="privacy-policy" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Privacy Policy</a>
-                                <a href="bugboutline" target="_blank" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Bug Bounty</a>
+                                <a href="contactusadvertise" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Advertise</a>
+                                <a href="eaas" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Explorer as a Service (EaaS)</a>
+                                <a href="apis" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">API Plans</a>
+                                <a href="priority-support" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Priority Support</a>
+                                <a href="token-update" className="text-xs not-italic text-gray-400 hover:text-blue-500 transition-colors duration-200">Token Update</a>
                             </div>
                         </div>
                     </div>
