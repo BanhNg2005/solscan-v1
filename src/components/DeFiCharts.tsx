@@ -1,4 +1,3 @@
-"use client"
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -90,7 +89,7 @@ export default function DeFiCharts() {
 
   return (
     <div className="rounded-xl border-border shadow-md overflow-hidden border bg-white h-full w-full">
-      <div className="flex flex-col gap-4 items-start justify-start">
+      <div className="flex flex-col items-stretch justify-between h-full w-full gap-0">
         {/* Header */}
         <div className="flex flex-row gap-1 items-center justify-between w-full flex-wrap px-4 pt-4">
           <div className="flex items-center gap-2">
@@ -296,8 +295,7 @@ export default function DeFiCharts() {
           <div className="flex gap-1 flex-row items-center justify-between flex-wrap w-full px-4">
             <div className="not-italic text-sm leading-6 font-medium text-neutral-900">Top Defi Protocols by Volume</div>
           </div>
-        </div>
-        <div className="flex flex-col gap-0 items-stretch justify-start w-full h-full data-table">
+          <div className="flex flex-col gap-0 items-stretch justify-start w-full h-full data-table">
           <div className="overflow-x-hidden h-full w-auto sm:w-full">
             <table className="w-full border-separate caption-bottom border-spacing-0">
               <thead className="sticky top-0 z-10">
@@ -370,7 +368,9 @@ export default function DeFiCharts() {
                       <td className="h-12 px-2 py-3 align-middle text-sm">
                         {txs.toLocaleString()}
                       </td>
+                      
                     </tr>
+                    
                   );
                 })}
               </tbody>
@@ -392,6 +392,8 @@ export default function DeFiCharts() {
             </table>
           </div>
         </div>
+        </div>
+        
       </div>
     </div>
   );
