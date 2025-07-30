@@ -95,7 +95,25 @@ export const authAPI = {
             console.error('Verify error:', error);
             return { error: 'Network error' };
         }
+    },
+
+    /**
+     * Get Solana price
+     */
+    price: async (): Promise<{ price?: number; error?: string }> => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/sol/price`, {
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Price fetch error:', error);
+            return { price: undefined, error: 'Network error' };
+        }
     }
+
 };
 
 export default authAPI;
