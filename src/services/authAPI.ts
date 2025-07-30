@@ -23,7 +23,7 @@ export const authAPI = {
     signin: async (email: string, password: string): Promise<AuthResponse> => {
         try {
             const response = await fetch(`${API_BASE_URL}/user/signin`, {
-                method: 'GET',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ email, password })
@@ -41,7 +41,7 @@ export const authAPI = {
     signup: async (email: string, password: string): Promise<AuthResponse> => {
         try {
             const response = await fetch(`${API_BASE_URL}/user/signup`, {
-                method: 'GET',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ email, password })
