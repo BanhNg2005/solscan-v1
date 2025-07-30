@@ -536,14 +536,12 @@ export default function Header() {
                             placeholder="Search transactions, blocks, programs, and tokens"
                           />
                           <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-fuchsia-600 rounded-md hover:bg-fuchsia-700 transition py-2 px-4">
-                            <Link href={`/search/${search}`}>
                               <Image
                                 src="/search.svg"
                                 alt="Search Icon"
                                 width={12}
                                 height={12}
                               />
-                            </Link>
                           </button>
                         </div>
                       </div>
