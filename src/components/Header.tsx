@@ -4,10 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { authAPI } from "@/services/authAPI";
-
+import { solanaAPI } from "@/services/solanaApi";
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -26,32 +26,52 @@ export default function Header() {
   const router = useRouter();
 
   // Check if user is logged in
-    useEffect(() => {
-        const checkAuth = async () => {
-            try {
-                const result = await authAPI.verify();
-                if (result.user) {
-                    setUser(result.user);
-                }
-            } catch (error) {
-                console.error('Auth check failed:', error);
-            }
-        };
-
-        checkAuth();
-    }, []);
-
-    const handleLogout = async () => {
-        try {
-            const result = await authAPI.logout();
-            if (!result.error) {
-                setUser(null);
-                router.push('/user/signin');
-            }
-        } catch (error) {
-            console.error('Logout failed:', error);
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const result = await authAPI.verify();
+        if (result.user) {
+          setUser(result.user);
         }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+      }
     };
+
+    checkAuth();
+  }, []);
+
+  const [solPrice, setSolPrice] = useState<number | null>(null);
+  const [change24h, setChange24h] = useState<number>(0);
+  useEffect(() => {
+    const fetchSolPrice = async () => {
+      const result = await solanaAPI.price() as {
+        price?: number;
+        change24h?: number;
+        error?: string;
+      };
+      if (result.price) {
+        setSolPrice(result.price);
+      }
+      if (result.change24h) {
+        setChange24h(result.change24h);
+      }
+    };
+
+    fetchSolPrice();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const result = await authAPI.logout();
+      if (!result.error) {
+        setUser(null);
+        router.push('/user/signin');
+      }
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
 
 
   return (
@@ -82,15 +102,18 @@ export default function Header() {
                       height={20}
                       className="mr-2"
                     />
-                    <div className="not-italic text-white text-xs font-semibold flex items-center">
-                      $151.35
+                    <div className="not-italic text-neutral-100 text-xs font-normal flex items-center">
+                      {solPrice !== null ? `$${solPrice.toFixed(2)}` : 'Loading...'}
+                      {/* {solPrice?.toFixed(1)} */}
                     </div>
-                    <span className="text-red-500 text-xs flex items-center ml-auto">-0.12%</span>
-                    <div data-orientation="vertical" className="shrink-0 inline-flex mx-1 h-4 w-[1px] bg-neutral-100 mt-auto mb-auto"></div>
-                    <div className="not-italic text-white text-xs font-semibold flex items-center">
+                    <span className={change24h >= 0 ? 'text-green-500 text-xs font-light flex items-center ml-1' : 'text-red-500 font-light text-xs flex items-center ml-1 mb-0.5'}>
+                      {`${change24h >= 0 ? '+' : ''}${change24h.toFixed(2)}%`}
+                    </span>
+                    <div data-orientation="vertical" className="shrink-0 inline-flex mx-1 h-4 w-[1px] bg-neutral-100 mt-auto mb-auto ml-2 mr-2"></div>
+                    <div className="not-italic text-neutral-100 text-xs font-normal flex items-center">
                       Avg Fee:
                     </div>
-                    <Link href={`/analysis/fee_tracker`} className="text-blue-400 text-xs font-normal flex items-center ml-1">
+                    <Link href={`/analysis/fee_tracker`} className="text-blue-300 text-xs font-normal flex items-center ml-1">
                       0.00001862
                     </Link>
                   </div>
@@ -428,14 +451,14 @@ export default function Header() {
                     </DropdownMenu>
 
                     {/* Sign In Button */}
-                      {user ? (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <button className="flex cursor-pointer select-none items-center rounded-lg px-4 py-3 text-sm leading-6 outline-none text-white ml-0 rounded-sm leading-6">
+                    {user ? (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="flex cursor-pointer select-none items-center rounded-lg px-4 py-3 text-sm leading-6 outline-none text-white ml-0 rounded-sm leading-6">
                             <div className="cursor-pointer text-neutral-100 bg-fuchsia-500 flex items-center justify-center rounded-3xl w-8 h-8 p-1">
-                                <div className="text-white text-sm font-normal not-italic flex items-center justify-center">
-                                    {user.email.split('@')[0][0].toUpperCase()}
-                                </div>
+                              <div className="text-white text-sm font-normal not-italic flex items-center justify-center">
+                                {user.email.split('@')[0][0].toUpperCase()}
+                              </div>
 
                             </div>
                             <Image
@@ -445,27 +468,27 @@ export default function Header() {
                               height={18}
                               className="transition-transform duration-200 cursor-pointer"
                             />
-                        </button>
-                        
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="bg-white border border-gray-200 shadow-lg p-2 w-[150px]">
-    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-        Logout
-    </DropdownMenuItem>
-    <DropdownMenuItem asChild>
-        <Link href="/user/profile" className="cursor-pointer">
-            Profile
-        </Link> 
-    </DropdownMenuItem>
-</DropdownMenuContent>
-                </DropdownMenu>
-            ) : (
-                <button className="flex cursor-pointer select-none items-center rounded-lg px-4 py-3 text-sm leading-6 outline-none text-white">
-                    <Link href="/user/signin" className="flex flex-row items-center gap-1 justify-center flex-wrap">
-                        Sign in
-                    </Link>
-                </button>
-            )}
+                          </button>
+
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" className="bg-white border border-gray-200 shadow-lg p-2 w-[150px]">
+                          <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                            Logout
+                          </DropdownMenuItem>
+                          <DropdownMenuItem asChild>
+                            <Link href="/user/profile" className="cursor-pointer">
+                              Profile
+                            </Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    ) : (
+                      <button className="flex cursor-pointer select-none items-center rounded-lg px-4 py-3 text-sm leading-6 outline-none text-white">
+                        <Link href="/user/signin" className="flex flex-row items-center gap-1 justify-center flex-wrap">
+                          Sign in
+                        </Link>
+                      </button>
+                    )}
 
 
                     <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'right' }}>
@@ -497,35 +520,35 @@ export default function Header() {
                 </div>
               </header>
               <div className="flex flex-row flex-wrap justify-start grow-0 shrink-0">
-                <div className="max-w-2xl w-full my-0 px-1 flex">
+                <div className="max-w-2xl w-full my-0 flex">
 
-                    {/* <div className="items-stretch justify-start max-w-2xl w-full"> */}
-                    <div className="flex flex-col gap-0 justify-center items-start w-full tb:w-[80%] tb:pr-5">
-                        <h1 className="text-2xl font-medium not-italic mb-4 text-white flex-auto">Exolore Solana Blockchain</h1>
-                        <div className="w-full h-11 relative">
-                          <div className="flex gap-1 flex-row items-center justify-start bg-neutral-100 rounded-lg w-full z-20 border border-neutral-300 absolute">
-                                <div className="grid items-center gap-2 w-full">
-                                    <input
-                                      type="text"
-                                      className="w-full p-2 border font-medium rounded-lg focus:outline-none focus:ring-0 focus:border-neutral-100 bg-white border-none pr-12"
-                                      value={search}
-                                      onChange={(e) => setSearch(e.target.value)}
-                                      placeholder="Search transactions, blocks, programs, and tokens"
-                                    />
-                                    <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-fuchsia-600 rounded-md hover:bg-fuchsia-700 transition py-2 px-4">
-                                      <Link href={`/search/${search}`}>
-                                        <Image
-                                          src="/search.svg"
-                                          alt="Search Icon"
-                                          width={12}
-                                          height={12}
-                                        />
-                                      </Link>
-                                    </button>
-                                </div>
-                          </div>
+                  {/* <div className="items-stretch justify-start max-w-2xl w-full"> */}
+                  <div className="flex flex-col gap-0 justify-center items-start w-full tb:w-[80%] tb:pr-5">
+                    <h1 className="text-2xl font-medium not-italic mb-4 text-white flex-auto">Exolore Solana Blockchain</h1>
+                    <div className="w-full h-11 relative">
+                      <div className="flex gap-1 flex-row items-center justify-start bg-neutral-100 rounded-lg w-full z-20 border border-neutral-300 absolute">
+                        <div className="grid items-center gap-2 w-full">
+                          <input
+                            type="text"
+                            className="w-full p-2 border font-medium rounded-lg focus:outline-none focus:ring-0 focus:border-neutral-100 bg-white border-none pr-12"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            placeholder="Search transactions, blocks, programs, and tokens"
+                          />
+                          <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-fuchsia-600 rounded-md hover:bg-fuchsia-700 transition py-2 px-4">
+                            <Link href={`/search/${search}`}>
+                              <Image
+                                src="/search.svg"
+                                alt="Search Icon"
+                                width={12}
+                                height={12}
+                              />
+                            </Link>
+                          </button>
                         </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
 
               </div>
