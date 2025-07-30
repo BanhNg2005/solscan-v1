@@ -1,10 +1,5 @@
-// API service for connecting to the Node.js backend
-// Determine backend URL: prefer env var, else use current origin in production, or localhost in non-browser
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
-  ? process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, '')
-  : (typeof window !== 'undefined'
-      ? window.location.origin
-      : 'http://localhost:3001');
+// This logic ensures the base URL is always correct, without a trailing slash.
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001')).replace(/\/+$/, '');
 
 export interface AuthResponse {
     message?: string;
@@ -27,15 +22,14 @@ export const authAPI = {
      */
     signin: async (email: string, password: string): Promise<AuthResponse> => {
         try {
+            // All endpoints must have the /api prefix for Nginx
             const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                credentials: 'include', // Important for cookies
+                credentials: 'include',
                 body: JSON.stringify({ email, password })
             });
-            
-            const data = await response.json();
-            return data;
+            return await response.json();
         } catch (error) {
             console.error('Signin error:', error);
             return { error: 'Network error' };
@@ -47,15 +41,14 @@ export const authAPI = {
      */
     signup: async (email: string, password: string): Promise<AuthResponse> => {
         try {
+            // All endpoints must have the /api prefix for Nginx
             const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ email, password })
             });
-            
-            const data = await response.json();
-            return data;
+            return await response.json();
         } catch (error) {
             console.error('Signup error:', error);
             return { error: 'Network error' };
@@ -67,13 +60,12 @@ export const authAPI = {
      */
     logout: async (): Promise<AuthResponse> => {
         try {
+            // All endpoints must have the /api prefix for Nginx
             const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });
-            
-            const data = await response.json();
-            return data;
+            return await response.json();
         } catch (error) {
             console.error('Logout error:', error);
             return { error: 'Network error' };
@@ -85,18 +77,16 @@ export const authAPI = {
      */
     verify: async (): Promise<VerifyResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+            // FIX: This was missing the /api prefix
+            const response = await fetch(`${API_BASE_URL}/api/auth/verify`, {
                 credentials: 'include'
             });
-            
-            const data = await response.json();
-            return data;
+            return await response.json();
         } catch (error) {
             console.error('Verify error:', error);
             return { error: 'Network error' };
         }
     },
-
 };
 
 export default authAPI;
