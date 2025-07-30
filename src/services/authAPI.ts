@@ -27,7 +27,7 @@ export const authAPI = {
      */
     signin: async (email: string, password: string): Promise<AuthResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/signin`, {
+            const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include', // Important for cookies
@@ -47,7 +47,7 @@ export const authAPI = {
      */
     signup: async (email: string, password: string): Promise<AuthResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+            const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -67,7 +67,7 @@ export const authAPI = {
      */
     logout: async (): Promise<AuthResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+            const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });
