@@ -22,8 +22,7 @@ export const authAPI = {
      */
     signin: async (email: string, password: string): Promise<AuthResponse> => {
         try {
-            // All endpoints must have the /api prefix for Nginx
-            const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
+            const response = await fetch(`${API_BASE_URL}/auth/signin`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -41,8 +40,7 @@ export const authAPI = {
      */
     signup: async (email: string, password: string): Promise<AuthResponse> => {
         try {
-            // All endpoints must have the /api prefix for Nginx
-            const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+            const response = await fetch(`${API_BASE_URL}/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -60,8 +58,7 @@ export const authAPI = {
      */
     logout: async (): Promise<AuthResponse> => {
         try {
-            // All endpoints must have the /api prefix for Nginx
-            const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+            const response = await fetch(`${API_BASE_URL}/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -77,8 +74,7 @@ export const authAPI = {
      */
     verify: async (): Promise<VerifyResponse> => {
         try {
-            // FIX: This was missing the /api prefix
-            const response = await fetch(`${API_BASE_URL}/api/auth/verify`, {
+            const response = await fetch(`${API_BASE_URL}/auth/verify`, {
                 credentials: 'include'
             });
             return await response.json();
