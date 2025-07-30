@@ -22,7 +22,7 @@ export const solanaAPI = {
      */
     price: async (): Promise<{ price?: number; error?: string }> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/sol/price`, {
+            const response = await fetch(`${API_BASE_URL}/sol/price`, {
                 credentials: 'include'
             });
 
@@ -36,7 +36,7 @@ export const solanaAPI = {
 
     change24h: async (): Promise<{ change24h?: number; error?: string }> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/sol/price`, {
+            const response = await fetch(`${API_BASE_URL}/sol/price`, {
                 credentials: 'include'
             });
 
@@ -50,7 +50,7 @@ export const solanaAPI = {
 
     network: async (): Promise<{ slotHeight?: number; blockHeight?: number; error?: string; }> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/sol/network`, {
+            const response = await fetch(`${API_BASE_URL}/sol/network`, {
                 credentials: 'include'
             });
 

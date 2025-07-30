@@ -27,7 +27,7 @@ export const authAPI = {
      */
     signin: async (email: string, password: string): Promise<AuthResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
+            const response = await fetch(`${API_BASE_URL}/auth/signin`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include', // Important for cookies
@@ -47,7 +47,7 @@ export const authAPI = {
      */
     signup: async (email: string, password: string): Promise<AuthResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+            const response = await fetch(`${API_BASE_URL}/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -67,7 +67,7 @@ export const authAPI = {
      */
     logout: async (): Promise<AuthResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+            const response = await fetch(`${API_BASE_URL}/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -85,7 +85,7 @@ export const authAPI = {
      */
     verify: async (): Promise<VerifyResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/auth/verify`, {
+            const response = await fetch(`${API_BASE_URL}/auth/verify`, {
                 credentials: 'include'
             });
             
@@ -96,23 +96,6 @@ export const authAPI = {
             return { error: 'Network error' };
         }
     },
-
-    /**
-     * Get Solana price
-     */
-    price: async (): Promise<{ price?: number; error?: string }> => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/sol/price`, {
-                credentials: 'include'
-            });
-
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error('Price fetch error:', error);
-            return { price: undefined, error: 'Network error' };
-        }
-    }
 
 };
 
