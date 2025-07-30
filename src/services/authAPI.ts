@@ -22,7 +22,7 @@ export const authAPI = {
      */
     signin: async (email: string, password: string): Promise<AuthResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/signin`, {
+            const response = await fetch(`${API_BASE_URL}/user/signin`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -40,7 +40,7 @@ export const authAPI = {
      */
     signup: async (email: string, password: string): Promise<AuthResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+            const response = await fetch(`${API_BASE_URL}/user/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
@@ -58,7 +58,7 @@ export const authAPI = {
      */
     logout: async (): Promise<AuthResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/logout`, {
+            const response = await fetch(`${API_BASE_URL}/user/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -74,7 +74,7 @@ export const authAPI = {
      */
     verify: async (): Promise<VerifyResponse> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/verify`, {
+            const response = await fetch(`${API_BASE_URL}/user/verify`, {
                 credentials: 'include'
             });
             return await response.json();
