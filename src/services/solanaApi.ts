@@ -1,8 +1,33 @@
-// This logic ensures the base URL is always correct, without a trailing slash.
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
-// (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001').replace(/\/+$/, '');
+const getApiBaseUrl = () => {
+    // If explicitly set via environment variable, use that
+    if (process.env.NEXT_PUBLIC_API_URL) {
+        return process.env.NEXT_PUBLIC_API_URL.replace(/\/+$/, '');
+    }
+    
+    // Auto-detect based on environment
+    if (typeof window !== 'undefined') {
+        // Browser environment - detect based on hostname
+        const hostname = window.location.hostname;
+        
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            // Local development
+            return 'http://localhost:3001';
+        } else if (hostname === '207.148.74.22') {
+            // Production server
+            return 'https://207.148.74.22';
+        } else {
+            // Fallback: use current origin (for custom domains)
+            return window.location.origin;
+        }
+    } else {
+        // Server-side rendering fallback
+        return process.env.NODE_ENV === 'production' 
+            ? 'https://207.148.74.22' 
+            : 'http://localhost:3001';
+    }
+};
 
-// ...existing code...
+const API_BASE_URL = getApiBaseUrl();
 
 export const solanaAPI = {
     /**
