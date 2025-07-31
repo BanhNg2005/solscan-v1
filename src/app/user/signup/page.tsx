@@ -100,7 +100,7 @@ export default function SignUp() {
                             </div>
                         </div>
 
-                        <div className="xl:max-w-1/2 md:max-w-full max-w-full xl:flex-[0_0_50%] md:flex-[0_0_100%] flex-[0_0_100%] block relative box-border my-0 p-0">
+                        <div className="w-full xl:max-w-1/2 xl:flex-[0_0_50%] block relative box-border my-0 p-0">
                             <div className="flex flex-col gap-1 items-stretch justify-start bg-neutral-100 w-full h-full py-4 px-[15px] lg:px-[70px] xl:px-[100px] rounded-tl-none xl:rounded-tl-[64px] rounded-bl-none xl:rounded-bl-[64px]">
                                 <div className="flex flex-row flex-wrap gap-1 justify-between items-center">
                                     <div className="flex flex-row flex-wrap gap-1 items-center justify-start cursor-pointer" onClick={() => window.history.back()}>

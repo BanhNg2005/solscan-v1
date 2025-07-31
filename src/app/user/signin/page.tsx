@@ -63,7 +63,7 @@ export default function SignIn() {
 
     return (
         <div className="flex flex-col gap-0 items-stretch justify-start h-full w-full min-h-screen">
-            <div className="w-full flex-1 min-h-[calc(100vh-64px)]">
+            <div className="w-full flex-1 min-h-[calc(100dvh-64px)]">
                 <div className="my-0 mx-auto max-w-full h-screen relative-p-0">
                     <Image
                         src="/bgLogin.svg"
@@ -74,19 +74,21 @@ export default function SignIn() {
                     />
 
                     <div className="flex flex-row flex-wrap justify-start grow-0 shrink-0 basis-full min-w-0 box-border gap-y-4 w-full h-full">
-                        <div className="xl:max-w-1/2 md:max-w-full max-w-full xl:flex-[0_0_50%] md:flex-[0_0_100%] flex-[0_0_100%] block relative box-border my-0 p-0">
+                        {/* Logo section - only visible on xl screens (1280px+) */}
+                        <div className="hidden xl:block xl:max-w-1/2 xl:flex-[0_0_50%] relative box-border my-0 p-0">
                             <div className="flex gap-1 flex-row flext-wrap justify-center items-center h-full w-full">
-                                                            <Image
-                                                                src="/branding-solscan-logo-dark.svg"
-                                                                alt="Solscan Logo"
-                                                                width={350}
-                                                                height={56}
-                                                            />
-                                                        </div>
+                                <Image
+                                    src="/branding-solscan-logo-dark.svg"
+                                    alt="Solscan Logo"
+                                    width={350}
+                                    height={56}
+                                />
+                            </div>
                         </div>
 
-                        <div className="xl:max-w-1/2 md:max-w-full max-w-full xl:flex-[0_0_50%] md:flex-[0_0_100%] flex-[0_0_100%] block relative box-border my-0 p-0">
-                            <div className="flex flex-col gap-1 items-stretch justify-start bg-neutral-100 w-full h-full py-4 px-[15px] lg:px-[70px] xl:px-[100px] rounded-tl-none xl:rounded-tl-[64px] rounded-bl-none xl:rounded-bl-[64px]">
+                        {/* Form section - full width on small screens, half width on xl screens */}
+                        <div className="w-full xl:max-w-1/2 xl:flex-[0_0_50%] block relative box-border my-0 p-0">
+                            <div className="flex flex-col gap-1 items-stretch justify-start bg-neutral-50 w-full h-full py-4 px-[15px] lg:px-[70px] xl:px-[100px] rounded-tl-none xl:rounded-tl-[64px] rounded-bl-none xl:rounded-bl-[64px]">
                                 <div className="flex flex-row flex-wrap gap-1 justify-between items-center">
                                     <div className="flex flex-row flex-wrap gap-1 items-center justify-start cursor-pointer" onClick={() => window.history.back()}>
                                         <ArrowLeft className="cursor-pointer text-xs text-blue-500 hover:text-blue-600 transiton duration-200 w-4 h-4" />
