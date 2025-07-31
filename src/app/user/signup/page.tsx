@@ -89,7 +89,7 @@ export default function SignUp() {
                     />
 
                     <div className="flex flex-row flex-wrap justify-start grow-0 shrink-0 basis-full min-w-0 box-border gap-y-4 w-full h-full">
-                        <div className="xl:max-w-1/2 md:max-w-full max-w-full xl:flex-[0_0_50%] md:flex-[0_0_100%] flex-[0_0_100%] block relative box-border my-0 p-0">
+                        <div className="hidden xl:block xl:max-w-1/2 xl:flex-[0_0_50%] relative box-border my-0 p-0">
                             <div className="flex gap-1 flex-row flext-wrap justify-center items-center h-full w-full">
                                 <Image
                                     src="/branding-solscan-logo-dark.svg"
