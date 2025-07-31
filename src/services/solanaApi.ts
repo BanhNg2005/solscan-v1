@@ -1,5 +1,6 @@
 // This logic ensures the base URL is always correct, without a trailing slash.
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001').replace(/\/+$/, '');
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+// (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001').replace(/\/+$/, '');
 
 // ...existing code...
 
@@ -9,7 +10,7 @@ export const solanaAPI = {
      */
     price: async (): Promise<{ price?: number; change24h?: number; error?: string }> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/sol/price`, {
+            const response = await fetch(`${API_BASE_URL}/api/sol/price`, {
                 credentials: 'include'
             });
             return await response.json();
@@ -21,7 +22,7 @@ export const solanaAPI = {
 
     network: async (): Promise<{ slotHeight?: number; blockHeight?: number; error?: string; }> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/sol/network`, {
+            const response = await fetch(`${API_BASE_URL}/api/sol/network`, {
                 credentials: 'include'
             });
             return await response.json();
@@ -33,7 +34,7 @@ export const solanaAPI = {
     
     fees: async (): Promise<{ avgFee?: string; minFee?: string; maxFee?: string; error?: string; }> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/sol/fees`, {
+            const response = await fetch(`${API_BASE_URL}/api/sol/fees`, {
                 credentials: 'include'
             });
             return await response.json();

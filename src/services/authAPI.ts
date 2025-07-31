@@ -1,5 +1,6 @@
 // This logic ensures the base URL is always correct, without a trailing slash.
-const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001')).replace(/\/+$/, '');
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+// (process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001')).replace(/\/+$/, '');
 
 export interface AuthResponse {
     message?: string;
