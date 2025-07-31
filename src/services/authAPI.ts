@@ -51,13 +51,18 @@ export const authAPI = {
      */
     signin: async (email: string, password: string): Promise<AuthResponse> => {
         try {
+            console.log('Attempting signin with URL:', `${API_BASE_URL}/api/auth/signin`);
             const response = await fetch(`${API_BASE_URL}/api/auth/signin`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ email, password })
             });
-            return await response.json();
+            
+            console.log('Signin response status:', response.status);
+            const data = await response.json();
+            console.log('Signin response data:', data);
+            return data;
         } catch (error) {
             console.error('Signin error:', error);
             return { error: 'Network error' };
@@ -69,13 +74,18 @@ export const authAPI = {
      */
     signup: async (email: string, password: string): Promise<AuthResponse> => {
         try {
+            console.log('Attempting signup with URL:', `${API_BASE_URL}/api/auth/signup`);
             const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
                 body: JSON.stringify({ email, password })
             });
-            return await response.json();
+            
+            console.log('Signup response status:', response.status);
+            const data = await response.json();
+            console.log('Signup response data:', data);
+            return data;
         } catch (error) {
             console.error('Signup error:', error);
             return { error: 'Network error' };
