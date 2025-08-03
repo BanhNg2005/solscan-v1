@@ -67,7 +67,19 @@ export const solanaAPI = {
             console.error('Fees fetch error:', error);
             return { error: 'Network error' };
         }
-    }
+    },
+
+  supply: async (): Promise<{ circulatingSupply?: number; circulatingSupplyPercentage?: number; totalSupply?: number; nonCirculatingSupply?: number; nonCirculatingSupplyPercentage?: number; error?: string }> => {
+      try {
+          const response = await fetch(`${API_BASE_URL}/api/sol/supply`, {
+              credentials: 'include'
+          });
+          return await response.json();
+      } catch (error) {
+          console.error('Supply fetch error:', error);
+          return { error: 'Network error' };
+      }
+  }
 };
 
 export default solanaAPI;
