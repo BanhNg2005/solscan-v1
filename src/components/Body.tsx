@@ -49,13 +49,15 @@ export default function Body() {
                     setCirculatingSupply(data.circulatingSupply);
                 }
                 if (data.circulatingSupplyPercentage !== undefined) {
-                    setCirculatingSupplyPercentage(data.circulatingSupplyPercentage);
+                    const percentage = Number(data.circulatingSupplyPercentage);
+                    setCirculatingSupplyPercentage(isNaN(percentage) ? null : percentage);
                 }
                 if (data.nonCirculatingSupply !== undefined) {
                     setNonCirculatingSupply(data.nonCirculatingSupply);
                 }
                 if (data.nonCirculatingSupplyPercentage !== undefined) {
-                    setNonCirculatingSupplyPercentage(data.nonCirculatingSupplyPercentage);
+                    const percentage = Number(data.nonCirculatingSupplyPercentage);
+                    setNonCirculatingSupplyPercentage(isNaN(percentage) ? null : percentage);
                 }
                 if (data.totalSupply !== undefined) {
                     setTotalSupply(data.totalSupply);
@@ -200,7 +202,7 @@ export default function Body() {
                                     <div>
                                         <p className="text-neutral-500 font-roboto text-sm font-normal leading-6">Circulating Supply</p>
                                         <p className="font-roberto text-sm font-normal leading-6">
-                                            {circulatingSupply !== null ? circulatingSupply : "Loading..."} SOL ({circulatingSupplyPercentage !== null ? circulatingSupplyPercentage.toFixed(2) : "Loading..."}%)
+                                            {circulatingSupply !== null ? circulatingSupply : "Loading..."} SOL ({circulatingSupplyPercentage !== null && typeof circulatingSupplyPercentage === 'number' ? circulatingSupplyPercentage.toFixed(2) : "Loading..."}%)
                                         </p>
                                     </div>
                                     <div data-orientation="horizontal" className="w-full h-0.25 bg-gray-200 shrink-0" role="none">
@@ -208,7 +210,7 @@ export default function Body() {
                                     <div>
                                         <p className="text-neutral-500 font-roboto text-sm font-normal leading-6">Non-circulating Supply</p>
                                         <p className="font-roberto text-sm font-normal leading-6">
-                                            {nonCirculatingSupply !== null ? nonCirculatingSupply : "Loading..."} SOL ({nonCirculatingSupplyPercentage !== null ? nonCirculatingSupplyPercentage.toFixed(2) : "Loading..."}%)
+                                            {nonCirculatingSupply !== null ? nonCirculatingSupply : "Loading..."} SOL ({nonCirculatingSupplyPercentage !== null && typeof nonCirculatingSupplyPercentage === 'number' ? nonCirculatingSupplyPercentage.toFixed(2) : "Loading..."}%)
                                         </p>
                                     </div>
                                 </div>
