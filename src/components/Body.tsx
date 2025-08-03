@@ -14,6 +14,11 @@ export default function Body() {
     const [timeRange, setTimeRange] = useState<"30m" | "2h" | "6h">("30m");
     const [blockHeight, setBlockHeight] = useState<number | null>(null);
     const [slotHeight, setSlotHeight] = useState<number | null>(null);
+    const [circulatingSupply, setCirculatingSupply] = useState<number | null>(null);
+    const [circulatingSupplyPercentage, setCirculatingSupplyPercentage] = useState<number | null>(null);
+    const [nonCirculatingSupply, setNonCirculatingSupply] = useState<number | null>(null);
+    const [nonCirculatingSupplyPercentage, setNonCirculatingSupplyPercentage] = useState<number | null>(null);
+    const [totalSupply, setTotalSupply] = useState<number | null>(null);
     
     useEffect(() => {
         const fetchNetworkData = async () => {
@@ -32,6 +37,36 @@ export default function Body() {
 
         fetchNetworkData(); // Fetch on initial load
         const interval = setInterval(fetchNetworkData, 15000); // Refresh every 15 seconds
+
+        return () => clearInterval(interval); // Cleanup on component unmount
+    }, []);
+
+    useEffect(() => {
+        const fetchSupplyData = async () => {
+            try {
+                const data = await solanaAPI.supply();
+                if (data.circulatingSupply !== undefined) {
+                    setCirculatingSupply(data.circulatingSupply);
+                }
+                if (data.circulatingSupplyPercentage !== undefined) {
+                    setCirculatingSupplyPercentage(data.circulatingSupplyPercentage);
+                }
+                if (data.nonCirculatingSupply !== undefined) {
+                    setNonCirculatingSupply(data.nonCirculatingSupply);
+                }
+                if (data.nonCirculatingSupplyPercentage !== undefined) {
+                    setNonCirculatingSupplyPercentage(data.nonCirculatingSupplyPercentage);
+                }
+                if (data.totalSupply !== undefined) {
+                    setTotalSupply(data.totalSupply);
+                }
+            } catch (error) {
+                console.error("Failed to fetch supply data:", error);
+            }
+        }
+
+        fetchSupplyData(); // Fetch on initial load
+        const interval = setInterval(fetchSupplyData, 15000); // Refresh every 15 seconds
 
         return () => clearInterval(interval); // Cleanup on component unmount
     }, []);
@@ -157,18 +192,24 @@ export default function Body() {
                             <div className="flex items-center gap-3 mb-2">
                                 <h3 className=" text-gray-900">SOL Supply</h3>
                             </div>
-                            <p className="text-neutral-800 font-roboto text-lg font-extrabold leading-6">604,305,570.88</p>
+                            <p className="text-neutral-800 font-roboto text-lg font-extrabold leading-6">
+                                {totalSupply !== null ? totalSupply : "Loading..."}
+                            </p>
                             <div className="rounded-lg border border-border bg-neutral-100 p-4 w-full border-none mt-4">
                                 <div className="flex flex-col gap-4 items-start justify-start">
                                     <div>
                                         <p className="text-neutral-500 font-roboto text-sm font-normal leading-6">Circulating Supply</p>
-                                        <p className="font-roberto text-sm font-normal leading-6">534,608,201.1516 SOL (88.5%)</p>
+                                        <p className="font-roberto text-sm font-normal leading-6">
+                                            {circulatingSupply !== null ? circulatingSupply : "Loading..."} SOL ({circulatingSupplyPercentage !== null ? circulatingSupplyPercentage.toFixed(2) : "Loading..."}%)
+                                        </p>
                                     </div>
                                     <div data-orientation="horizontal" className="w-full h-0.25 bg-gray-200 shrink-0" role="none">
                                     </div>
                                     <div>
                                         <p className="text-neutral-500 font-roboto text-sm font-normal leading-6">Non-circulating Supply</p>
-                                        <p className="font-roberto text-sm font-normal leading-6">669,697,369.736 SOL (11.5%)</p>
+                                        <p className="font-roberto text-sm font-normal leading-6">
+                                            {nonCirculatingSupply !== null ? nonCirculatingSupply : "Loading..."} SOL ({nonCirculatingSupplyPercentage !== null ? nonCirculatingSupplyPercentage.toFixed(2) : "Loading..."}%)
+                                        </p>
                                     </div>
                                 </div>
                             </div>
