@@ -195,14 +195,14 @@ export default function Body() {
                                 <h3 className=" text-gray-900">SOL Supply</h3>
                             </div>
                             <p className="text-neutral-800 font-roboto text-lg font-extrabold leading-6">
-                                {totalSupply !== null ? totalSupply : "Loading..."}
+                                {totalSupply !== null ? totalSupply.toLocaleString() : "Loading..."}
                             </p>
                             <div className="rounded-lg border border-border bg-neutral-100 p-4 w-full border-none mt-4">
                                 <div className="flex flex-col gap-4 items-start justify-start">
                                     <div>
                                         <p className="text-neutral-500 font-roboto text-sm font-normal leading-6">Circulating Supply</p>
                                         <p className="font-roberto text-sm font-normal leading-6">
-                                            {circulatingSupply !== null ? circulatingSupply : "Loading..."} SOL ({circulatingSupplyPercentage !== null && typeof circulatingSupplyPercentage === 'number' ? circulatingSupplyPercentage.toFixed(2) : "Loading..."}%)
+                                            {circulatingSupply !== null ? circulatingSupply.toLocaleString() : "Loading..."} SOL ({circulatingSupplyPercentage !== null && typeof circulatingSupplyPercentage === 'number' ? circulatingSupplyPercentage.toFixed(2) : "Loading..."}%)
                                         </p>
                                     </div>
                                     <div data-orientation="horizontal" className="w-full h-0.25 bg-gray-200 shrink-0" role="none">
@@ -210,7 +210,7 @@ export default function Body() {
                                     <div>
                                         <p className="text-neutral-500 font-roboto text-sm font-normal leading-6">Non-circulating Supply</p>
                                         <p className="font-roberto text-sm font-normal leading-6">
-                                            {nonCirculatingSupply !== null ? nonCirculatingSupply : "Loading..."} SOL ({nonCirculatingSupplyPercentage !== null && typeof nonCirculatingSupplyPercentage === 'number' ? nonCirculatingSupplyPercentage.toFixed(2) : "Loading..."}%)
+                                            {nonCirculatingSupply !== null ? nonCirculatingSupply.toLocaleString() : "Loading..."} SOL ({nonCirculatingSupplyPercentage !== null && typeof nonCirculatingSupplyPercentage === 'number' ? nonCirculatingSupplyPercentage.toFixed(2) : "Loading..."}%)
                                         </p>
                                     </div>
                                 </div>
