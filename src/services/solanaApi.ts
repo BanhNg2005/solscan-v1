@@ -45,7 +45,7 @@ export const solanaAPI = {
         }
     },
 
-    network: async (): Promise<{ slotHeight?: number; blockHeight?: number; error?: string; }> => {
+    network: async (): Promise<{ slotHeight?: number; blockHeight?: number; totalTransactions?: number; error?: string; }> => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/sol/network`, {
                 credentials: 'include'
