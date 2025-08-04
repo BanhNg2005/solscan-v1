@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "./Header";
 import DeFiCharts from "./DeFiCharts";
 import TPSCharts from "./TPSCharts";
@@ -14,12 +14,17 @@ export default function Body() {
     const [timeRange, setTimeRange] = useState<"30m" | "2h" | "6h">("30m");
     const [blockHeight, setBlockHeight] = useState<number | null>(null);
     const [slotHeight, setSlotHeight] = useState<number | null>(null);
+    const [totalTransactions, setTotalTransactions] = useState<number | null>(null);
     const [circulatingSupply, setCirculatingSupply] = useState<number | null>(null);
     const [circulatingSupplyPercentage, setCirculatingSupplyPercentage] = useState<number | null>(null);
     const [nonCirculatingSupply, setNonCirculatingSupply] = useState<number | null>(null);
     const [nonCirculatingSupplyPercentage, setNonCirculatingSupplyPercentage] = useState<number | null>(null);
     const [totalSupply, setTotalSupply] = useState<number | null>(null);
     
+    // State and ref for scrollable top markets
+    const [showScrollButton, setShowScrollButton] = useState(false);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
         const fetchNetworkData = async () => {
             try {
@@ -29,6 +34,9 @@ export default function Body() {
                 }
                 if (data.slotHeight) {
                     setSlotHeight(data.slotHeight);
+                }
+                if (data.totalTransactions) {
+                    setTotalTransactions(data.totalTransactions);
                 }
             } catch (error) {
                 console.error("Failed to fetch network data:", error);
@@ -73,34 +81,86 @@ export default function Body() {
         return () => clearInterval(interval); // Cleanup on component unmount
     }, []);
 
+    // Check if container is overflowing and show/hide scroll button
+    useEffect(() => {
+        const checkOverflow = () => {
+            if (scrollContainerRef.current) {
+                const container = scrollContainerRef.current;
+                const isOverflowing = container.scrollWidth > container.clientWidth;
+                const canScrollMore = container.scrollLeft < container.scrollWidth - container.clientWidth - 1;
+                setShowScrollButton(isOverflowing && canScrollMore);
+            }
+        };
+        window.addEventListener('resize', checkOverflow);
+        const container = scrollContainerRef.current;
+        if (container) {
+            container.addEventListener('scroll', checkOverflow);
+        }
+        
+        return () => {
+            window.removeEventListener('resize', checkOverflow);
+            if (container) {
+                container.removeEventListener('scroll', checkOverflow);
+            }
+        };
+    }, []);
+
+    // Scroll function
+    const handleScroll = () => {
+        if (scrollContainerRef.current) {
+            const container = scrollContainerRef.current;
+            const scrollAmount = 200; 
+            container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+    };
+
     return (
         <div className="w-full flex-1 min-h min-h-screen bg-gray-50 flex-col">
             < Header />
             <div className="my-0 mx-auto max-w-full px-4 md:px-6 2xl:px-0 2xl:max-w-[1400px] pt-4 sm:pt-5">
                 <div className="flex flex-col items-stretch justify-start gap-2 md:gap-4">
-                    <div className="flex rounded-xl items-center justify-between bg-white border mt-5 align-middle border-border shadow-md overflow-hidden">
-                        <div className="p-2 flex items-center gap-2 bg-neutral-100 rounded-l-xl">
+                    <div className="flex gap-[0px] rounded-xl items-center whitespace-nowrap bg-white border border-border">
+                        <div className="p-2 flex items-center gap-[5px] bg-neutral-200 rounded-tl-lg rounded-bl-lg">
                             <Image
                                 src="/rocket.png"
                                 alt="Logo"
-                                width={16}
-                                height={16}
+                                width={12}
+                                height={12}
                             />
                             <div className="overflow-hidden text-neutral-700 overflow-ellipsis font-roboto text-xs font-semibold leading-4">Top Markets</div>
                         </div>
                         <div className="relative w-full overflow-hidden">
-                            <div className="absolute right-0 top-0 bottom-0 flex items-center z-10">
-                                <div className="absolute inset-0 w-8 bg-gradient-to-l from-white to-transparent"></div>
-                                
-                            </div>
-                            <div className="w-full overflow-x-auto no-scrollbar px-2">
-                                <div className="flex gap-3 2xl:gap-4 select-none cursor-grabbing">
+                            {/* {showScrollButton && (
+                                <div className="absolute right-0 top-0 bottom-0 flex items-center z-10">
+                                    <div className="absolute inset-0 w-8 bg-gradient-to-l from-neutral-100 to-transparent pointer-events-none"></div>
+                                    <button
+                                        onClick={handleScroll}
+                                        className="relative z-20 p-1.5 bg-white hover:bg-gray-50 border border-gray-200 hover:border-gray-300 rounded-full transition-all mr-2 shadow-sm hover:shadow-md"
+                                        aria-label="Scroll right"
+                                    >
+                                        <Image
+                                            src="/right-arrow.svg"
+                                            alt="Scroll right"
+                                            width={14}
+                                            height={14}
+                                            className="text-neutral-600"
+                                        />
+                                    </button>
+                                </div>
+                            )} */}
+                            <div 
+                                ref={scrollContainerRef}
+                                className="w-full overflow-auto no-scrollbar px-2"
+                            >
+                                <div className="flex gap-3 2xl:gap-4 select-none cursor-grab active:cursor-grabbing">
+
+
                                     <Link href="/market/1" className="flex items-center gap-2 text-neutral-700 text-xs leading-4">
                                         #1<Image
                                             src="/USDC-WSOL.png"
                                             alt="Solana Logo"
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                         />
                                         USDC-WSOL
                                     </Link>
@@ -108,8 +168,8 @@ export default function Body() {
                                         #2<Image
                                             src="/USDC-WSOL.png"
                                             alt="Solana Logo"
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                         />
                                         USDC-WSOL
                                     </Link>
@@ -117,8 +177,8 @@ export default function Body() {
                                         #3<Image
                                             src="/USDC-WSOL.png"
                                             alt="Solana Logo"
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                         />
                                         USDC-WSOL
                                     </Link>
@@ -126,8 +186,8 @@ export default function Body() {
                                         #4<Image
                                             src="/USDC-WSOL.png"
                                             alt="Solana Logo"
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                         />
                                         USDC-WSOL
                                     </Link>
@@ -135,8 +195,8 @@ export default function Body() {
                                         #5<Image
                                             src="/USDC-WSOL.png"
                                             alt="Solana Logo"
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                         />
                                         USDC-WSOL
                                     </Link>
@@ -144,8 +204,8 @@ export default function Body() {
                                         #6<Image
                                             src="/USDC-WSOL.png"
                                             alt="Solana Logo"
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                         />
                                         USDC-WSOL
                                     </Link>
@@ -153,8 +213,8 @@ export default function Body() {
                                         #7<Image
                                             src="/USDC-WSOL.png"
                                             alt="Solana Logo"
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                         />
                                         USDC-WSOL
                                     </Link>
@@ -162,8 +222,8 @@ export default function Body() {
                                         #8<Image
                                             src="/USDC-WSOL.png"
                                             alt="Solana Logo"
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                         />
                                         USDC-WSOL
                                     </Link>
@@ -171,8 +231,8 @@ export default function Body() {
                                         #9<Image
                                             src="/USDC-WSOL.png"
                                             alt="Solana Logo"
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                         />
                                         USDC-WSOL
                                     </Link>
@@ -180,8 +240,8 @@ export default function Body() {
                                         #10<Image
                                             src="/USDC-WSOL.png"
                                             alt="Solana Logo"
-                                            width={40}
-                                            height={40}
+                                            width={30}
+                                            height={30}
                                         />
                                         USDC-WSOL
                                     </Link>
@@ -189,6 +249,8 @@ export default function Body() {
                             </div>
                         </div>
                     </div>
+
+
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
                         <div className="bg-white rounded-2xl border p-6 hover:shadow-lg transition-shadow">
                             <div className="flex items-center gap-3 mb-2">
@@ -245,7 +307,9 @@ export default function Body() {
                             <div className="flex items-center gap-3 mb-2">
                                 <h3 className=" text-gray-900">Network (Transactions)</h3>
                             </div>
-                            <p className="text-neutral-800 font-roboto text-lg font-extrabold leading-6">423,032,476,496</p>
+                            <p className="text-neutral-800 font-roboto text-lg font-extrabold leading-6">
+                                {totalTransactions !== null ? totalTransactions.toLocaleString() : "Loading..."}
+                            </p>
                             <div className="rounded-lg border border-border bg-neutral-100 p-4 w-full border-none mt-4">
                                 <div className="flex flex-col gap-4 items-start justify-start">
                                     <div className="flex flex-row flex-wrap justify-start grow-0 shrink-0 items-stretch w-full">
@@ -253,7 +317,7 @@ export default function Body() {
                                             <p className="text-neutral-500 font-roboto text-sm font-normal leading-6">Block Height</p>
                                             <p className="font-roberto text-sm font-normal leading-6">
                                                 {blockHeight !== null ? blockHeight : "Loading..."}
-                                                
+
                                             </p>
                                         </div>
                                         <div className="max-w-24/24 flex-12/24 box-border block relative">
@@ -716,7 +780,7 @@ export default function Body() {
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    
+
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
 
