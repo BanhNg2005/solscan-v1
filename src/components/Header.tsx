@@ -527,7 +527,7 @@ export default function Header() {
                     <h1 className="text-2xl font-medium not-italic mb-4 text-white flex-auto">Exolore Solana Blockchain</h1>
                     <div className="w-full h-11 relative">
                       <div className="flex gap-1 flex-row items-center justify-start bg-neutral-100 rounded-lg w-full z-20 border border-neutral-300 absolute">
-                        <div className="grid items-center gap-2 w-full">
+                        <div className="grid items-center gap-5 w-full">
                           <input
                             type="text"
                             className="w-full p-2 border font-medium rounded-lg focus:outline-none focus:ring-0 focus:border-neutral-100 bg-white border-none pr-12"
