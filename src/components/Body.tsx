@@ -18,12 +18,32 @@ export default function Body() {
     const [circulatingSupply, setCirculatingSupply] = useState<number | null>(null);
     const [circulatingSupplyPercentage, setCirculatingSupplyPercentage] = useState<number | null>(null);
     const [nonCirculatingSupply, setNonCirculatingSupply] = useState<number | null>(null);
-    const [nonCirculatingSupplyPercentage, setNonCirculatingSupplyPercentage] = useState<number | null>(null);
+    const [nonCirculatingSupplyPercentage, setNonCirculatingSupplyPercentage] = useState<number | null>(null)
     const [totalSupply, setTotalSupply] = useState<number | null>(null);
     
     // State and ref for scrollable top markets
     const [showScrollButton, setShowScrollButton] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+    // handle dark/light mode
+    // const [isDarkMode, setIsDarkMode] = useState(false);
+    // useEffect(() => {
+    //     const handleDarkModeChange = () => {
+    //         setIsDarkMode(document.documentElement.classList.contains('dark'));
+    //     };
+
+    //     // Initial check
+    //     handleDarkModeChange();
+
+    //     // Listen for changes in dark mode
+    //     document.documentElement.addEventListener('classlistchange', handleDarkModeChange);
+
+    //     return () => {
+    //         document.documentElement.removeEventListener('classlistchange', handleDarkModeChange);
+    //     };
+    // }, []);
+
+    
 
     useEffect(() => {
         const fetchNetworkData = async () => {
@@ -115,7 +135,7 @@ export default function Body() {
     };
 
     return (
-        <div className="w-full flex-1 min-h min-h-screen bg-gray-50 flex-col">
+        <div className="w-full flex-1 min-h min-h-screen bg-gray-50 dark:bg-gray-900 flex-col">
             < Header />
             <div className="my-0 mx-auto max-w-full px-4 md:px-6 2xl:px-0 2xl:max-w-[1400px] pt-4 sm:pt-5">
                 <div className="flex flex-col items-stretch justify-start gap-2 md:gap-4">
@@ -387,10 +407,10 @@ export default function Body() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5 ">
                         {/* Left side - Dashboards (1/2 width on large screens) */}
                         <div className="flex flex-col items-stretch justify-start gap-2 md:gap-4">
-                            <div className="rounded-xl border-border shadow-md overflow-hidden border h-auto">
-                                <div className="flex flex-col gap-4 items-start justify-start bg-white">
+                            <div className="rounded-xl border-border shadow-md overflow-hidden border h-auto dark:border-gray-700">
+                                <div className="flex flex-col gap-4 items-start justify-start bg-white dark:bg-gray-800">
                                     <div className="flex flex-row gap-1 items-center justify-between w-full flex-wrap px-4 pt-4">
-                                        <h3 className="text-gray-900 text-sm font-semibold">Latest Transactions</h3>
+                                        <h3 className="text-gray-900 dark:text-gray-100 text-sm font-semibold">Latest Transactions</h3>
                                         <button className="white-space-nowrap focus:outline-none items-center justify-center font-semibold text-cyan-300 bg-white border-cyan-300 border rounded-lg px-1 py-1 hover:bg-emerald-50 transition-colors">Customize</button>
                                     </div>
                                     <div className="flex flex-col gap-0 items-stretch justify-start w-full h-full">
@@ -904,7 +924,7 @@ export default function Body() {
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
+                                                                <span className="text-neutral-500">$8.89</span>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
@@ -919,28 +939,31 @@ export default function Body() {
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
 
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
+                                                            <div className="text-blue-500 text-sm">
                                                                 <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
+                                                                    src={"/officialtrumpcoin.png"}
+                                                                    alt="Official Trump Coin"
+                                                                    width={24}
+                                                                    height={24}
+                                                                    className="inline-block mr-2"
                                                                 />
-                                                            </button></div>
+                                                                <Link href="/token/officialtrumpcoin">
+                                                                    USDC
+                                                                </Link>
+                                                            </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
-                                                                    </Link>
+                                                                    <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
+                                                                    USDC
+                                                                </div>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
+                                                                <span className="text-neutral-500">$1</span>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
@@ -955,28 +978,31 @@ export default function Body() {
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
 
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
+                                                            <div className="text-blue-500 text-sm">
                                                                 <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
+                                                                    src={"/officialtrumpcoin.png"}
+                                                                    alt="Official Trump Coin"
+                                                                    width={24}
+                                                                    height={24}
+                                                                    className="inline-block mr-2"
                                                                 />
-                                                            </button></div>
+                                                                <Link href="/token/officialtrumpcoin">
+                                                                    Jupiter
+                                                                </Link>
+                                                            </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
-                                                                    </Link>
+                                                                    <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
+                                                                    JUP
+                                                                </div>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
+                                                                <span className="text-neutral-500">$0.46</span>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
@@ -991,28 +1017,31 @@ export default function Body() {
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
 
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
+                                                            <div className="text-blue-500 text-sm">
                                                                 <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
+                                                                    src={"/officialtrumpcoin.png"}
+                                                                    alt="Official Trump Coin"
+                                                                    width={24}
+                                                                    height={24}
+                                                                    className="inline-block mr-2"
                                                                 />
-                                                            </button></div>
+                                                                <Link href="/token/officialtrumpcoin">
+                                                                    Pump
+                                                                </Link>
+                                                            </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
-                                                                    </Link>
+                                                                    <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
+                                                                    PUMP
+                                                                </div>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
+                                                                <span className="text-neutral-500">$0.002889</span>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
@@ -1027,28 +1056,31 @@ export default function Body() {
                                                     <tr className="transition-colors hover:bg-neutral-100">
                                                         <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
 
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
+                                                            <div className="text-blue-500 text-sm">
                                                                 <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
+                                                                    src={"/officialtrumpcoin.png"}
+                                                                    alt="Official Trump Coin"
+                                                                    width={24}
+                                                                    height={24}
+                                                                    className="inline-block mr-2"
                                                                 />
-                                                            </button></div>
+                                                                <Link href="/token/officialtrumpcoin">
+                                                                    Pudgy Penguins
+                                                                </Link>
+                                                            </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
-                                                                    </Link>
+                                                                    <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
+                                                                    PENGU
+                                                                </div>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
+                                                                <span className="text-neutral-500">$0.03575</span>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
