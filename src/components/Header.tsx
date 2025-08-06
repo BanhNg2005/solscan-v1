@@ -16,8 +16,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+/** TODO for tomorrow: 
+ * 1. use Sheet from shadcn to create a mobile menu 
+ * - This will allow us to have a responsive design that works well on mobile devices.
+ * - use menu.svg for the mobile menu icon
+ * 2. Use popover to do the customize button in body
+ * - This will allow users to customize their view of the body content.
+ * - use radio group inside this to choose between latest transaction and latest blocks
+ * 3. Fix light/dark mode toggle (OPTIONAL IF HAVE TIME)
+*/
+
+
 export default function Header() {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const [search, setSearch] = useState("");
   const [user, setUser] = useState<{
     userId: number;
@@ -73,6 +84,9 @@ export default function Header() {
     }
   };
 
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
 
   return (
 
@@ -495,20 +509,20 @@ export default function Header() {
                       <nav>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="icon">
+                            <Button variant="ghost" size="icon" className="text-white hover:bg-white/20 hover:text-white focus-visible:ring-0 focus-visible:ring-offset-0">
                               <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
                               <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
                               <span className="sr-only">Toggle theme</span>
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => setTheme("light")}>
+                          <DropdownMenuContent align="end" className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">
+                            <DropdownMenuItem onClick={() => setTheme("light")} className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
                               Light
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setTheme("dark")}>
+                            <DropdownMenuItem onClick={() => setTheme("dark")} className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
                               Dark
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setTheme("system")}>
+                            <DropdownMenuItem onClick={() => setTheme("system")} className="cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
                               System
                             </DropdownMenuItem>
                           </DropdownMenuContent>
