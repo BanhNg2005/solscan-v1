@@ -8,6 +8,7 @@ import DeFiCharts from "./DeFiCharts";
 import TPSCharts from "./TPSCharts";
 import { NetworkCharts } from "./NetworkCharts";
 import { solanaAPI } from "@/services/solanaApi";
+import { latestTsxAPI } from "@/services/latestTsxAPI";
 
 export default function Body() {
     // Shared state for time range across TPS and Network charts
@@ -20,30 +21,47 @@ export default function Body() {
     const [nonCirculatingSupply, setNonCirculatingSupply] = useState<number | null>(null);
     const [nonCirculatingSupplyPercentage, setNonCirculatingSupplyPercentage] = useState<number | null>(null)
     const [totalSupply, setTotalSupply] = useState<number | null>(null);
-    
+    const [latestTransactions, setLatestTransactions] = useState<{ signature?: string; slot?: number; time: number; error?: string }[]>([]);
+
     // State and ref for scrollable top markets
     const [showScrollButton, setShowScrollButton] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     // handle dark/light mode
-    // const [isDarkMode, setIsDarkMode] = useState(false);
-    // useEffect(() => {
-    //     const handleDarkModeChange = () => {
-    //         setIsDarkMode(document.documentElement.classList.contains('dark'));
-    //     };
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    useEffect(() => {
+        const handleDarkModeChange = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'));
+        };
 
-    //     // Initial check
-    //     handleDarkModeChange();
+        // Initial check
+        handleDarkModeChange();
 
-    //     // Listen for changes in dark mode
-    //     document.documentElement.addEventListener('classlistchange', handleDarkModeChange);
+        // Listen for changes in dark mode
+        document.documentElement.addEventListener('classlistchange', handleDarkModeChange);
 
-    //     return () => {
-    //         document.documentElement.removeEventListener('classlistchange', handleDarkModeChange);
-    //     };
-    // }, []);
+        return () => {
+            document.documentElement.removeEventListener('classlistchange', handleDarkModeChange);
+        };
+    }, []);
 
-    
+    useEffect(() => {
+        const fetchLatestTransactions = async () => {
+            try {
+                const data = await latestTsxAPI.latestTxsFE();
+                if (data.transactions) {
+                    setLatestTransactions(data.transactions);
+                }
+            } catch (error) {
+                console.error("Failed to fetch latest transactions:", error);
+            }
+        };
+
+        fetchLatestTransactions(); // Fetch on initial load
+        const interval = setInterval(fetchLatestTransactions, 30 * 60 * 1000); // Refresh every 30 minutes
+
+        return () => clearInterval(interval); // Cleanup on component unmount
+    }, []);
 
     useEffect(() => {
         const fetchNetworkData = async () => {
@@ -116,7 +134,7 @@ export default function Body() {
         if (container) {
             container.addEventListener('scroll', checkOverflow);
         }
-        
+
         return () => {
             window.removeEventListener('resize', checkOverflow);
             if (container) {
@@ -129,7 +147,7 @@ export default function Body() {
     const handleScroll = () => {
         if (scrollContainerRef.current) {
             const container = scrollContainerRef.current;
-            const scrollAmount = 200; 
+            const scrollAmount = 200;
             container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         }
     };
@@ -168,7 +186,7 @@ export default function Body() {
                                     </button>
                                 </div>
                             )} */}
-                            <div 
+                            <div
                                 ref={scrollContainerRef}
                                 className="w-full overflow-auto no-scrollbar px-2"
                             >
@@ -473,21 +491,26 @@ export default function Body() {
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
+                                                                    <Link href={`/txs/details/${latestTransactions[0]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                        {latestTransactions[0]?.signature ? latestTransactions[0].signature.slice(0, 16) + '...' : "Loading..."}
                                                                     </Link>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
+                                                                <span className="text-neutral-500 dark:text-neutral-400">
+                                                                    {latestTransactions[0]?.time ? new Date(latestTransactions[0].time).toLocaleString() : "Loading..."}
+                                                                </span>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                {/* <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
                                                                     350793540
+                                                                </Link> */}
+                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                    {latestTransactions[0]?.slot ? latestTransactions[0].slot : "Loading..."}
                                                                 </Link>
                                                             </div>
                                                         </td>
@@ -522,21 +545,24 @@ export default function Body() {
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
+                                                                    <Link href={`/txs/details/${latestTransactions[1]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                        {latestTransactions[1]?.signature ? latestTransactions[1].signature.slice(0, 16) + '...' : "Loading..."}
+
                                                                     </Link>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
+                                                                <span className="text-neutral-500 dark:text-neutral-400">
+                                                                    {latestTransactions[1]?.time ? new Date(latestTransactions[1].time).toLocaleString() : "Loading..."}
+                                                                </span>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
+                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                    {latestTransactions[1]?.slot ? latestTransactions[1].slot : "Loading..."}
                                                                 </Link>
                                                             </div>
                                                         </td>
@@ -571,21 +597,24 @@ export default function Body() {
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
+                                                                    <Link href={`/txs/details/${latestTransactions[2]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                        {latestTransactions[2]?.signature ? latestTransactions[2].signature.slice(0, 16) + '...' : "Loading..."}
+
                                                                     </Link>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
+                                                                <span className="text-neutral-500 dark:text-neutral-400">
+                                                                    {latestTransactions[2]?.time ? new Date(latestTransactions[2].time).toLocaleString() : "Loading..."}
+                                                                </span>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
+                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                    {latestTransactions[2]?.slot ? latestTransactions[2].slot : "Loading..."}
                                                                 </Link>
                                                             </div>
                                                         </td>
@@ -620,21 +649,23 @@ export default function Body() {
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
+                                                                    <Link href={`/txs/details/${latestTransactions[3]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                        {latestTransactions[3]?.signature ? latestTransactions[3].signature.slice(0, 16) + '...' : "Loading..."}
                                                                     </Link>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
-                                                            </div>
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className="text-neutral-500">
+                                                                        {latestTransactions[3]?.time ? new Date(latestTransactions[3].time).toLocaleString() : "Loading..."}
+                                                                    </span>
+                                                                </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
+                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                    {latestTransactions[3]?.slot ? latestTransactions[3].slot : "Loading..."}
                                                                 </Link>
                                                             </div>
                                                         </td>
@@ -669,21 +700,22 @@ export default function Body() {
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
+                                                                    <Link href={`/txs/details/${latestTransactions[4]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                        {latestTransactions[4]?.signature ? latestTransactions[4].signature.slice(0, 16) + '...' : "Loading..."}
                                                                     </Link>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
-                                                            </div>
+                                                                <span className="text-neutral-500">
+                                                                    {latestTransactions[4]?.time ? new Date(latestTransactions[4].time).toLocaleString() : "Loading..."}</span>
+                                                                </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
+                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                    {latestTransactions[4]?.slot ? latestTransactions[4].slot : "Loading..."}
                                                                 </Link>
                                                             </div>
                                                         </td>
@@ -718,21 +750,21 @@ export default function Body() {
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
+                                                                    <Link href={`/txs/details/${latestTransactions[5]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                        {latestTransactions[5]?.signature ? latestTransactions[5].signature.slice(0, 16) + '...' : "Loading..."}
                                                                     </Link>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
+                                                                <span className="text-neutral-500">{latestTransactions[5]?.time ? new Date(latestTransactions[5].time).toLocaleString() : "Loading..."}</span>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
+                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                    {latestTransactions[5]?.slot ? latestTransactions[5].slot : "Loading..."}
                                                                 </Link>
                                                             </div>
                                                         </td>
@@ -767,21 +799,23 @@ export default function Body() {
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
+                                                                    <Link href={`/txs/details/${latestTransactions[6]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                        {latestTransactions[6]?.signature ? latestTransactions[6].signature.slice(0, 16) + '...' : "Loading..."}
                                                                     </Link>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
+                                                                <span className="text-neutral-500">
+                                                                    {latestTransactions[6]?.time ? new Date(latestTransactions[6].time).toLocaleString() : "Loading..."}
+                                                                </span>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
+                                                                <Link href={`/block/${latestTransactions[6]?.slot}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                    {latestTransactions[6]?.slot ? latestTransactions[6].slot : "Loading..."}
                                                                 </Link>
                                                             </div>
                                                         </td>
@@ -817,21 +851,23 @@ export default function Body() {
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href="/tx/5f3c8b2d1e4fb" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        5f3c8b2d1e4fb...
+                                                                    <Link href={`/txs/details/${latestTransactions[7]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                        {latestTransactions[7]?.signature ? latestTransactions[7].signature.slice(0, 16) + '...' : "Loading..."}
                                                                     </Link>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">07-03-2025 07:37:13</span>
+                                                                <span className="text-neutral-500">
+                                                                    {latestTransactions[7]?.time ? new Date(latestTransactions[7].time).toLocaleString() : "Loading..."}
+                                                                </span>
                                                             </div>
                                                         </td>
                                                         <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
                                                             <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
+                                                                <Link href={`/block/${latestTransactions[7]?.slot}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
+                                                                    {latestTransactions[7]?.slot ? latestTransactions[7].slot : "Loading..."}
                                                                 </Link>
                                                             </div>
                                                         </td>
@@ -956,8 +992,8 @@ export default function Body() {
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
                                                                     <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    USDC
-                                                                </div>
+                                                                        USDC
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -995,8 +1031,8 @@ export default function Body() {
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
                                                                     <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    JUP
-                                                                </div>
+                                                                        JUP
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -1034,8 +1070,8 @@ export default function Body() {
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
                                                                     <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    PUMP
-                                                                </div>
+                                                                        PUMP
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -1073,8 +1109,8 @@ export default function Body() {
                                                             <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
                                                                 <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
                                                                     <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    PENGU
-                                                                </div>
+                                                                        PENGU
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </td>
