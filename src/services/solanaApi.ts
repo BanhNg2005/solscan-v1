@@ -14,7 +14,7 @@ const getApiBaseUrl = () => {
             return 'http://localhost:3001';
         } else if (hostname === '207.148.74.22') {
             // Production server
-            return 'https://207.148.74.22';
+            return 'https://207.148.74.22/api'; // if doesn't work then remove /api next time
         } else {
             // Fallback: use current origin (for custom domains)
             return window.location.origin;
@@ -22,7 +22,7 @@ const getApiBaseUrl = () => {
     } else {
         // Server-side rendering fallback
         return process.env.NODE_ENV === 'production' 
-            ? 'https://207.148.74.22' 
+            ? 'https://207.148.74.22/api' 
             : 'http://localhost:3001';
     }
 };
@@ -35,7 +35,8 @@ export const solanaAPI = {
      */
     price: async (): Promise<{ price?: number; change24h?: number; error?: string }> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/sol/price`, {
+          // add /api when deploying
+            const response = await fetch(`${API_BASE_URL}/sol/price`, {
                 credentials: 'include'
             });
             return await response.json();
@@ -47,7 +48,7 @@ export const solanaAPI = {
 
     network: async (): Promise<{ slotHeight?: number; blockHeight?: number; totalTransactions?: number; error?: string; }> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/sol/network`, {
+            const response = await fetch(`${API_BASE_URL}/sol/network`, {
                 credentials: 'include'
             });
             return await response.json();
@@ -59,7 +60,7 @@ export const solanaAPI = {
     
     fees: async (): Promise<{ avgFee?: string; minFee?: string; maxFee?: string; error?: string; }> => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/sol/fees`, {
+            const response = await fetch(`${API_BASE_URL}/sol/fees`, {
                 credentials: 'include'
             });
             return await response.json();
@@ -71,7 +72,7 @@ export const solanaAPI = {
 
   supply: async (): Promise<{ circulatingSupply?: number; circulatingSupplyPercentage?: number; totalSupply?: number; nonCirculatingSupply?: number; nonCirculatingSupplyPercentage?: number; error?: string }> => {
       try {
-          const response = await fetch(`${API_BASE_URL}/api/sol/supply`, {
+          const response = await fetch(`${API_BASE_URL}/sol/supply`, {
               credentials: 'include'
           });
           return await response.json();
