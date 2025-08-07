@@ -9,6 +9,18 @@ import { useRouter } from "next/navigation";
 import { authAPI } from "@/services/authAPI";
 import { solanaAPI } from "@/services/solanaApi";
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +37,6 @@ import {
  * - use radio group inside this to choose between latest transaction and latest blocks
  * 3. Fix light/dark mode toggle (OPTIONAL IF HAVE TIME)
 */
-
 
 export default function Header() {
   const { theme, setTheme } = useTheme();
@@ -134,7 +145,8 @@ export default function Header() {
                 </div>
 
                 <div className="flex gap-1 flex-row items-center justify-start flex-wrap ">
-                  <div role="menubar" className="h-10 items-center px-1 hidden sm:flex" data-orientation="horizontal">
+                  {/* Desktop Menu - hidden below 1400px */}
+                  <div role="menubar" className="h-10 items-center px-1 hidden min-[1400px]:flex" data-orientation="horizontal">
                     {/* Analytics Dropdown */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -530,6 +542,176 @@ export default function Header() {
                       </nav>
 
                     </div>
+                  </div>
+                  {/* Mobile Sheet Menu - shown below 1400px */}
+                  <div className="min-[1400px]:hidden">
+                    <Sheet>
+                      <SheetTrigger asChild>
+                        <Button variant="ghost" size="icon" className="text-white hover:bg-white/20">
+                          <Image
+                            src="/menu.svg"
+                            alt="Menu"
+                            width={24}
+                            height={24}
+                          />
+                        </Button>
+                      </SheetTrigger>
+                      <SheetContent side="left" className="flex flex-col space-y-2 text-center sm:text-left">
+                        <h2 className="text-lg font-medium text-foreground flex justify-center mb-0 mt-6">
+                          <a href="/">
+                            <Image
+                              src="/solscan.png"
+                              alt="Logo"
+                              width={100}
+                              height={24}
+                            />
+                          </a>
+                        </h2>
+                        <div className="overflow-y-auto h-[calc(100dvh-105px)]">
+                          {/* Analytics Section */}
+                          <div className="space-y-2">
+                            <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wide">Analytics</h3>
+                            <div className="space-y-1">
+                              <SheetClose asChild>
+                                <Link href="/network" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+                                  Solana Network
+                                </Link>
+                              </SheetClose>
+                              <SheetClose asChild>
+                                <Link href="/analysis/fee_tracker" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+                                  Fee Tracker Dashboard
+                                </Link>
+                              </SheetClose>
+                              <SheetClose asChild>
+                                <Link href="/analysis/staking" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+                                  Solana Staking Dashboard
+                                </Link>
+                              </SheetClose>
+                              <SheetClose asChild>
+                                <Link href="/analysis/stablecoin" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+                                  Stable Coin Dashboard
+                                </Link>
+                              </SheetClose>
+                            </div>
+                          </div>
+
+                          {/* DeFi Section */}
+                          <div className="space-y-2">
+                            <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wide">DeFi</h3>
+                            <div className="grid grid-cols-2 gap-1">
+                              <SheetClose asChild>
+                                <Link href="/defi/agepro" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm">
+                                  AgePro
+                                </Link>
+                              </SheetClose>
+                              <SheetClose asChild>
+                                <Link href="/defi/jupiter-dca" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm">
+                                  Jupiter DCA
+                                </Link>
+                              </SheetClose>
+                              <SheetClose asChild>
+                                <Link href="/defi/kamino" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm">
+                                  Kamino
+                                </Link>
+                              </SheetClose>
+                              <SheetClose asChild>
+                                <Link href="/defi/meteora" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm">
+                                  Meteora
+                                </Link>
+                              </SheetClose>
+                              <SheetClose asChild>
+                                <Link href="/defi/orca" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm">
+                                  Orca
+                                </Link>
+                              </SheetClose>
+                              <SheetClose asChild>
+                                <Link href="/defi/raydium" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors text-sm">
+                                  Raydium
+                                </Link>
+                              </SheetClose>
+                            </div>
+                          </div>
+
+                          {/* Leaderboard Section */}
+                          <div className="space-y-2">
+                            <h3 className="font-semibold text-sm text-gray-500 uppercase tracking-wide">Leaderboard</h3>
+                            <div className="space-y-1">
+                              <SheetClose asChild>
+                                <Link href="/leaderboard/token" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+                                  Token
+                                </Link>
+                              </SheetClose>
+                              <SheetClose asChild>
+                                <Link href="/leaderboard/nft" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+                                  NFT
+                                </Link>
+                              </SheetClose>
+                              <SheetClose asChild>
+                                <Link href="/leaderboard/account" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+                                  Account
+                                </Link>
+                              </SheetClose>
+                            </div>
+                          </div>
+
+                          {/* User Actions */}
+                          <div className="border-t pt-4 space-y-2">
+                            {user ? (
+                              <>
+                                <div className="flex items-center gap-3 px-3 py-2">
+                                  <div className="bg-fuchsia-500 rounded-full w-8 h-8 flex items-center justify-center text-white text-sm">
+                                    {user.email.split('@')[0][0].toUpperCase()}
+                                  </div>
+                                  <span className="text-sm">{user.email}</span>
+                                </div>
+                                <SheetClose asChild>
+                                  <Link href="/user/profile" className="block px-3 py-2 rounded-md hover:bg-gray-100 transition-colors">
+                                    Profile
+                                  </Link>
+                                </SheetClose>
+                                <button 
+                                  onClick={handleLogout}
+                                  className="block w-full text-left px-3 py-2 rounded-md hover:bg-gray-100 transition-colors"
+                                >
+                                  Logout
+                                </button>
+                              </>
+                            ) : (
+                              <SheetClose asChild>
+                                <Link href="/user/signin" className="block px-3 py-2 bg-fuchsia-600 text-white rounded-md hover:bg-fuchsia-700 transition-colors text-center">
+                                  Sign In
+                                </Link>
+                              </SheetClose>
+                            )}
+
+                            {/* Theme Toggle */}
+                            {/* <div className="space-y-1">
+                              <h4 className="text-sm font-medium px-3">Theme</h4>
+                              <div className="grid grid-cols-3 gap-1 px-3">
+                                <button 
+                                  onClick={() => setTheme("light")}
+                                  className="px-2 py-1 text-xs rounded hover:bg-gray-100 transition-colors"
+                                >
+                                  Light
+                                </button>
+                                <button 
+                                  onClick={() => setTheme("dark")}
+                                  className="px-2 py-1 text-xs rounded hover:bg-gray-100 transition-colors"
+                                >
+                                  Dark
+                                </button>
+                                <button 
+                                  onClick={() => setTheme("system")}
+                                  className="px-2 py-1 text-xs rounded hover:bg-gray-100 transition-colors"
+                                >
+                                  System
+                                </button>
+                              </div>
+                            </div> */}
+                          </div>
+                        </div>
+                      </SheetContent>
+                    </Sheet>
                   </div>
                 </div>
               </header>
