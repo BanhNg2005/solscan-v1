@@ -8,6 +8,16 @@ import DeFiCharts from "./DeFiCharts";
 import TPSCharts from "./TPSCharts";
 import { NetworkCharts } from "./NetworkCharts";
 import { solanaAPI } from "@/services/solanaApi";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableFooter,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
 import { latestTsxAPI } from "@/services/latestTsxAPI";
 
 export default function Body() {
@@ -23,6 +33,7 @@ export default function Body() {
     const [totalSupply, setTotalSupply] = useState<number | null>(null);
     const [latestTransactions, setLatestTransactions] = useState<{ signature?: string; slot?: number; time: number; error?: string }[]>([]);
 
+    // fake data: 
     // State and ref for scrollable top markets
     const [showScrollButton, setShowScrollButton] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -433,472 +444,106 @@ export default function Body() {
                                     </div>
                                     <div className="flex flex-col gap-0 items-stretch justify-start w-full h-full">
                                         <div className="min-w-0 table-auto flex-1">
-                                            <table className="w-full border-separate border-spacing-0">
-                                                <thead className="sticky top-0">
-                                                    <tr className="bg-gray-100">
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
-                                                            <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
-                                                                <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                    <div className="flex gap-1 flex-row items-center justify-start">
+
+                                            <Table>
+                                                <TableHeader>
+                                                    <TableRow>
+                                                        <TableHead>
+                                                            <div className="flex items-center justify-center">
+                                                                <Image
+                                                                    src={"/question-mark.svg"}
+                                                                    alt="Question Mark Icon"
+                                                                    width={14}
+                                                                    height={14}
+                                                                />
+                                                            </div>
+                                                        </TableHead>
+                                                        <TableHead>Signature</TableHead>
+                                                        <TableHead>Time</TableHead>
+                                                        <TableHead>Block</TableHead>
+                                                        <TableHead>Instructions</TableHead>
+                                                    </TableRow>
+                                                </TableHeader>
+                                                <TableBody>
+                                                    {latestTransactions.length > 0 ? (
+                                                        latestTransactions.map((transaction, index) => (
+                                                            <TableRow key={transaction.signature || index} className="hover:bg-neutral-50 dark:hover:bg-gray-700">
+                                                                <TableCell className="w-[50px]">
+                                                                    <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
                                                                         <Image
-                                                                            src={"/question-mark.svg"}
-                                                                            alt="Question Mark Icon"
-                                                                            width={16}
-                                                                            height={16}
+                                                                            src={"/eye.svg"}
+                                                                            alt="View Icon"
+                                                                            width={12}
+                                                                            height={12}
                                                                             className="w-4 h-4 text-neutral-500"
                                                                         />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </th>
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
-                                                            <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
-                                                                <span>Signature</span>
-                                                            </div>
-                                                        </th>
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
-                                                            <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
-                                                                <span>Time</span>
-                                                            </div>
-                                                        </th>
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
-                                                            <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
-                                                                <span>Block</span>
-                                                            </div>
-                                                        </th>
-                                                        <th className="h-12 px-2 text-left align-middle font-bold leading-4 text-neutral-700 bg-white">
-                                                            <div className="flex gap-2 flex-row items-center justify-between flex-wrap">
-                                                                <span>Instructions</span>
-                                                            </div>
-                                                        </th>
-                                                    </tr>
-                                                    <tr></tr>
-                                                </thead>
-                                                <tbody className="border-separate border-spacing-0">
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href={`/txs/details/${latestTransactions[0]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        {latestTransactions[0]?.signature ? latestTransactions[0].signature.slice(0, 16) + '...' : "Loading..."}
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500 dark:text-neutral-400">
-                                                                    {latestTransactions[0]?.time ? new Date(latestTransactions[0].time).toLocaleString() : "Loading..."}
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                {/* <Link href="/block/350793540" className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    350793540
-                                                                </Link> */}
-                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    {latestTransactions[0]?.slot ? latestTransactions[0].slot : "Loading..."}
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
+                                                                    </button></div>
+                                                                </TableCell>
+                                                                <TableCell className="font-mono">
+                                                                    {transaction.signature ? (
+                                                                        <Link
+                                                                            href={`/tx/${transaction.signature}`}
+                                                                            className="text-blue-500 hover:text-blue-700 transition-colors duration-200"
+                                                                        >
+                                                                            {transaction.signature.slice(0, 16)}...
+                                                                        </Link>
+                                                                    ) : (
+                                                                        <span className="text-gray-400">Unknown</span>
+                                                                    )}
+                                                                </TableCell>
+                                                                <TableCell className="text-sm text-gray-600 dark:text-gray-300">
+                                                                    {new Date(transaction.time).toLocaleTimeString()}
+                                                                </TableCell>
+                                                                <TableCell>
+                                                                    {transaction.slot ? (
+                                                                        <Link
+                                                                            href={`/block/${transaction.slot}`}
+                                                                            className="text-blue-500 hover:text-blue-700 transition-colors duration-200"
+                                                                        >
+                                                                            {transaction.slot}
+                                                                        </Link>
+                                                                    ) : (
+                                                                        <span className="text-gray-400">Unknown</span>
+                                                                    )}
+                                                                </TableCell>
+                                                                <TableCell >
+                                                                    <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
+                                                                        <div className="infline-flex items-center gap-1">
+                                                                            <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
+                                                                                <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
+                                                                            </div>
+                                                                            <button type="button">
+                                                                                <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
+                                                                                    <h3>1+</h3>
+                                                                                </div>
+                                                                            </button>
                                                                         </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href={`/txs/details/${latestTransactions[1]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        {latestTransactions[1]?.signature ? latestTransactions[1].signature.slice(0, 16) + '...' : "Loading..."}
-
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500 dark:text-neutral-400">
-                                                                    {latestTransactions[1]?.time ? new Date(latestTransactions[1].time).toLocaleString() : "Loading..."}
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    {latestTransactions[1]?.slot ? latestTransactions[1].slot : "Loading..."}
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
                                                                     </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        ))
+                                                    ) : (
+                                                        <TableRow>
+                                                            <TableCell colSpan={5} className="text-center py-4 text-gray-500 dark:text-gray-400">
+                                                                Loading transactions...
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    )}
+                                                </TableBody>
 
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href={`/txs/details/${latestTransactions[2]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        {latestTransactions[2]?.signature ? latestTransactions[2].signature.slice(0, 16) + '...' : "Loading..."}
-
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500 dark:text-neutral-400">
-                                                                    {latestTransactions[2]?.time ? new Date(latestTransactions[2].time).toLocaleString() : "Loading..."}
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    {latestTransactions[2]?.slot ? latestTransactions[2].slot : "Loading..."}
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href={`/txs/details/${latestTransactions[3]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        {latestTransactions[3]?.signature ? latestTransactions[3].signature.slice(0, 16) + '...' : "Loading..."}
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className="text-neutral-500">
-                                                                        {latestTransactions[3]?.time ? new Date(latestTransactions[3].time).toLocaleString() : "Loading..."}
-                                                                    </span>
-                                                                </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    {latestTransactions[3]?.slot ? latestTransactions[3].slot : "Loading..."}
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href={`/txs/details/${latestTransactions[4]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        {latestTransactions[4]?.signature ? latestTransactions[4].signature.slice(0, 16) + '...' : "Loading..."}
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">
-                                                                    {latestTransactions[4]?.time ? new Date(latestTransactions[4].time).toLocaleString() : "Loading..."}</span>
-                                                                </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    {latestTransactions[4]?.slot ? latestTransactions[4].slot : "Loading..."}
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href={`/txs/details/${latestTransactions[5]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        {latestTransactions[5]?.signature ? latestTransactions[5].signature.slice(0, 16) + '...' : "Loading..."}
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">{latestTransactions[5]?.time ? new Date(latestTransactions[5].time).toLocaleString() : "Loading..."}</span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href={`/txs/current`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    {latestTransactions[5]?.slot ? latestTransactions[5].slot : "Loading..."}
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href={`/txs/details/${latestTransactions[6]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        {latestTransactions[6]?.signature ? latestTransactions[6].signature.slice(0, 16) + '...' : "Loading..."}
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">
-                                                                    {latestTransactions[6]?.time ? new Date(latestTransactions[6].time).toLocaleString() : "Loading..."}
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href={`/block/${latestTransactions[6]?.slot}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    {latestTransactions[6]?.slot ? latestTransactions[6].slot : "Loading..."}
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr className="transition-colors hover:bg-neutral-100">
-                                                        <td className="h-12 px-2 align-middle leading-4 font-normal text-neutral-700">
-
-                                                            <div className="px-1 border rounded-md flex items-center justify-center cursor-pointer bg-neutral-200 hover:bg-neutral-300 transition-colors duration-200 py-1"><button type="button" className="flex items-center gap-2 hover:underline">
-                                                                <Image
-                                                                    src={"/eye.svg"}
-                                                                    alt="View Icon"
-                                                                    width={16}
-                                                                    height={16}
-                                                                    className="w-4 h-4 text-neutral-500"
-                                                                />
-                                                            </button></div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="gap-1 flex-row items-center justify-start flex-nowrap infline-flex">
-                                                                <div className="flex-row gap-1 items-center justify-start flex-nowrap inline-flex">
-                                                                    <Link href={`/txs/details/${latestTransactions[7]?.signature}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                        {latestTransactions[7]?.signature ? latestTransactions[7].signature.slice(0, 16) + '...' : "Loading..."}
-                                                                    </Link>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex items-center gap-2">
-                                                                <span className="text-neutral-500">
-                                                                    {latestTransactions[7]?.time ? new Date(latestTransactions[7].time).toLocaleString() : "Loading..."}
-                                                                </span>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <Link href={`/block/${latestTransactions[7]?.slot}`} className="text-blue-500 hover:text-blue-700 transition-colors duration-200">
-                                                                    {latestTransactions[7]?.slot ? latestTransactions[7].slot : "Loading..."}
-                                                                </Link>
-                                                            </div>
-                                                        </td>
-                                                        <td className="h-12 px-2 py-2 align-middle leading-4 text-sm font-normal text-neutral-700">
-                                                            <div className="flex gap-1 flex-row items-center justify-start flex-nowrap">
-                                                                <div className="infline-flex items-center gap-1">
-                                                                    <div className="flex justify-center items-center transition-colors py-0 font-medium text-xs text-neutral-700 bg-gray-200 rounded-sm px-2 leading-4">
-                                                                        <div className="truncate max-w-[100px]">SetComputeUnitLimit</div>
-                                                                    </div>
-                                                                    <button type="button">
-                                                                        <div className="flex justify-center items-center transition-colors flex-nowrap w-max bg-neutral-200 py-0 font-medium text-neutral-700 leading-4 border border-neutral-300 rounded-sm px-2 hover:bg-neutral-300">
-                                                                            <h3>1+</h3>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            </Table>
+                                            <div className="px-4 pb-4 pt-4 border-t border-border bg-neutral-50 w-full">
+                                                <Link href={"/txs"} className="w-full">
+                                                    <div className="flex gap-1 flex-row items-center justify-center flex-nowrap hover:text-blue-500 transition-colors duration-200">
+                                                        <div className="not-italic text-xs leading-4 font-medium transition-colors uppercase text-gray-400 hover:text-blue-500 w-full text-center">
+                                                            View All Transactions
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="px-4 pb-4 pt-4 border-t border-border bg-neutral-50 w-full">
-                                        <Link href={"/txs"} className="w-full">
-                                            <div className="flex gap-1 flex-row items-center justify-center flex-nowrap hover:text-blue-500 transition-colors duration-200">
-                                                <div className="not-italic text-xs leading-4 font-medium transition-colors uppercase text-gray-400 hover:text-blue-500 w-full text-center">
-                                                    View All Transactions
-                                                </div>
-                                            </div>
-                                        </Link>
-                                    </div>
+
                                 </div>
                             </div>
                             <div className="rounded-xl border-border shadow-md overflow-hidden border h-auto">
