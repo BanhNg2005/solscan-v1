@@ -33,7 +33,6 @@ export default function Body() {
     const [totalSupply, setTotalSupply] = useState<number | null>(null);
     const [latestTransactions, setLatestTransactions] = useState<{ signature?: string; slot?: number; time: number; error?: string }[]>([]);
 
-    // fake data: 
     // State and ref for scrollable top markets
     const [showScrollButton, setShowScrollButton] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -93,7 +92,7 @@ export default function Body() {
         };
 
         fetchNetworkData(); // Fetch on initial load
-        const interval = setInterval(fetchNetworkData, 15000); // Refresh every 15 seconds
+        const interval = setInterval(fetchNetworkData, 60000); // Refresh every 60 seconds
 
         return () => clearInterval(interval); // Cleanup on component unmount
     }, []);
@@ -125,7 +124,7 @@ export default function Body() {
         }
 
         fetchSupplyData(); // Fetch on initial load
-        const interval = setInterval(fetchSupplyData, 15000); // Refresh every 15 seconds
+        const interval = setInterval(fetchSupplyData, 60000); // Refresh every 60 seconds to match the API's update frequency
 
         return () => clearInterval(interval); // Cleanup on component unmount
     }, []);
